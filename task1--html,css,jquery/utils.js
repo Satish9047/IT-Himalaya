@@ -83,3 +83,16 @@ function getDueDate() {
   now.setDate(now.getDate() + 1);
   return formatDate(now);
 }
+
+// Local Storage
+function getLocalData() {
+  const localData = localStorage.getItem("tasks");
+  if (localData?.length > 0) {
+    return JSON.parse(localData);
+  }
+  return [];
+}
+
+function setLocalData(data) {
+  localStorage.setItem("tasks", JSON.stringify(data));
+}
