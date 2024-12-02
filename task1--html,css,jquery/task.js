@@ -5,9 +5,10 @@ class Task {
     this.createdAt = createdAt;
     this.completed = false;
     this.dueDate = dueDate;
+    this.completedAt = null;
   }
 
   toggleCompleted() {
-    this.completed = !this.completed;
+    this.completed = true;
   }
 }
