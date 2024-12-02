@@ -1,0 +1,108 @@
+*{
+  margin: 0;,
+  padding: 0;
+  box-sizing: border-box;
+}
+html {
+    font-size: 10px;
+}
+
+h1{
+    font-size: 3rem;
+}
+h2{
+    font-size: 2.4rem;
+}
+h3{
+    font-size: 1.8rem;
+}
+h4, li, p{
+    font-size: 1.6rem;
+}
+
+
+main{
+    margin: auto;
+    padding: 2rem;
+    width: 90%;
+    height: 100vh;
+}
+
+header {
+    padding: 2rem;
+  background-color: orange;
+}
+
+button{
+    background-color: orange;
+    padding: 1rem 2rem;
+    border-radius: 1rem;
+    border:none;
+    cursor: pointer;
+}
+button:hover{
+    background-color: #E78F81;
+    /* border: 1px solid gray; */
+}
+ li{
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    background-color: orange;
+    border-radius: 1rem;
+ }
+
+ #addTask{
+    padding: 1rem 2rem;
+    font-size: 1.8rem;
+    border: 1px solid black;
+    border-radius: 1rem;
+    }
+
+#todoList, #completedList{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.addTaskDiv{
+    display: flex;
+    gap: 2rem;
+    padding: 2rem;
+    justify-content: center;
+}
+
+.taskList{
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    width: 100rem;
+    margin: 2rem auto;
+}
+
+.taskDetails{
+    display: flex;
+    justify-content: space-between;
+}
+
+.taskInfo{
+   position: relative;
+    display: flex;
+    justify-content: flex-end;
+    gap: 2rem;
+    font-size: 1.4rem;
+}
+.taskEvents{
+    display: flex;
+    gap: 2rem;
+}
+.info{
+    position:absolute;
+    display:flex;
+    flex-direction: row;
+    gap: 2rem;
+  left: 0;
+  bottom: 0;
+}
+
+
