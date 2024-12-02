@@ -1,7 +1,6 @@
 $("document").ready(function () {
   const tasks = [];
-  const storedTasks = JSON.parse(localStorage.getItem("tasks"));
-  console.log("stored task", storedTasks, typeof storedTasks);
+  const storedTasks = getLocalData();
   if (storedTasks?.length > 0) {
     storedTasks.forEach((task) => {
       const newTask = new Task(
@@ -32,8 +31,7 @@ $("document").ready(function () {
       const newTask = new Task(id, taskDescription, createdAt, dueDate);
       tasks.push(newTask);
       $("#taskDescription").val("");
-      console.log("create task", tasks);
-      localStorage.setItem("tasks", JSON.stringify(tasks));
+      setLocalData(tasks);
     } else {
       alert("Please enter a task description");
     }
@@ -43,13 +41,10 @@ $("document").ready(function () {
   // Complete Task
   $("#todoList").on("click", ".complete", function () {
     const taskId = $(this).closest("li").data("id").toString();
-    console.log("task id: ", taskId);
-    console.log("task ", tasks);
     const task = tasks.find((task) => task.id === taskId);
-    console.log("task info", task);
     task.toggleCompleted();
     task.completedAt = getFormattedDate();
-    localStorage.setItem("tasks", JSON.stringify(tasks));
+    setLocalData(tasks);
     renderCompletedTasks(tasks);
     renderTasks(tasks);
   });
@@ -57,17 +52,15 @@ $("document").ready(function () {
   // Delete Task
   $("#todoList").on("click", ".delete", function () {
     const taskId = $(this).closest("li").data("id");
-    console.log("delete task id: ", taskId);
     deleteTask(tasks, taskId);
-    localStorage.setItem("tasks", JSON.stringify(tasks));
+    setLocalData(tasks);
     renderTasks(tasks);
   });
 
   //Deleted completed task
   $("#completedList").on("click", ".delete", function () {
     const taskId = $(this).closest("li").data("id");
-    console.log("delete task id: ", taskId);
-    localStorage.setItem("tasks", JSON.stringify(tasks));
+    setLocalData(tasks);
     deleteCompletedTask(tasks, taskId);
   });
 });
