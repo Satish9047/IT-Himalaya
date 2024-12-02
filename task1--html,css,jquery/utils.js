@@ -52,6 +52,7 @@ function deleteTask(tasks, taskId) {
   renderTasks(tasks);
   renderCompletedTasks(tasks);
 }
+// Delete Completed Task  i created this just so we can render only completed tasks when require eg: deleting completed tasks doesn't required to re render todoTask list
 function deleteCompletedTask(tasks, taskId) {
   const taskIndex = tasks.findIndex((task) => task.id === taskId);
   tasks.splice(taskIndex, 1);
