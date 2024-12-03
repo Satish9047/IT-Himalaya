@@ -50,7 +50,9 @@ function deleteTask(tasks, taskId) {
   const taskIndex = tasks.findIndex((task) => task.id === taskId);
   tasks.splice(taskIndex, 1);
 }
-// Delete Completed Task  i created this just so we can render only completed tasks when require eg: deleting completed tasks doesn't required to re render todoTask list
+
+// Delete Completed Task  i created this just so we can render only completed tasks when require
+//eg: deleting completed tasks doesn't required to re render todoTask list
 function deleteCompletedTask(tasks, taskId) {
   const taskIndex = tasks.findIndex((task) => task.id === taskId);
   tasks.splice(taskIndex, 1);
@@ -100,19 +102,6 @@ function getDueDate() {
   return formatDate(now);
 }
 
-// Local Storage
-function getLocalData() {
-  const localData = localStorage.getItem("tasks");
-  if (localData?.length > 0) {
-    return JSON.parse(localData);
-  }
-  return [];
-}
-
-function setLocalData(data) {
-  localStorage.setItem("tasks", JSON.stringify(data));
-}
-
 //Set Data to LocalForage
 function setTaskToLocalForage(tasks) {
   const tasksToSave = tasks.map((task) => ({
@@ -128,8 +117,8 @@ function setTaskToLocalForage(tasks) {
     .then(() => {
       console.log("Tasks saved successfully:", tasks);
     })
-    .catch((err) => {
-      console.error("Error saving tasks:", err);
+    .catch((error) => {
+      console.error("Error saving tasks:", error);
     });
 }
 
@@ -144,8 +133,8 @@ async function getTasksFromLocalForage() {
         return tasksData;
       }
     })
-    .catch((err) => {
-      console.error("Error retrieving tasks from localForage:", err);
+    .catch((error) => {
+      console.error("Error retrieving tasks from localForage:", error);
       return [];
     });
 }
