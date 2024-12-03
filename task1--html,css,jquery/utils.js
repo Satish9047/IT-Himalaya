@@ -71,6 +71,25 @@ function formatDate(date) {
   return `${year}/${month}/${day}-${hours}:${minutes}:${seconds}`;
 }
 
+//Add Task
+function addTask(tasks) {
+  const taskDescription = $("#taskDescription").val();
+  const createdAt = getFormattedDate();
+  const id = Date.now().toString();
+  const dueDate = getDueDate();
+
+  // Create new instance of Task Class
+  if (taskDescription.trim() !== "") {
+    const newTask = new Task(id, taskDescription, createdAt, dueDate);
+    tasks.push(newTask);
+    $("#taskDescription").val("");
+    setLocalData(tasks);
+    renderTasks(tasks);
+  } else {
+    alert("Please enter a task description");
+  }
+}
+
 // Get Formatted Date
 function getFormattedDate() {
   const now = new Date();
