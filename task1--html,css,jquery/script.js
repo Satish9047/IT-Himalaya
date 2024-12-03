@@ -1,6 +1,12 @@
 $("document").ready(function () {
   const tasks = [];
 
+  // Set current year in footer
+  const currentDate = new Date();
+  const formattedDate = currentDate.getFullYear();
+  $("#copyRightDate").text(formattedDate);
+
+  // Retrieve tasks from local storage
   const storedTasks = getLocalData();
   if (storedTasks?.length > 0) {
     storedTasks.forEach((task) => {
@@ -16,12 +22,14 @@ $("document").ready(function () {
     renderCompletedTasks(tasks);
   }
 
+  // Add Task using Enter key
   $("#taskDescription").on("keydown", function (event) {
     if (event.key === "Enter") {
       $("#addTaskBtn").click();
     }
   });
 
+  // Add Task
   $("#addTaskBtn").click(function () {
     const taskDescription = $("#taskDescription").val();
     const createdAt = getFormattedDate();
