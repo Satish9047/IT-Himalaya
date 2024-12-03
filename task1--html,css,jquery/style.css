@@ -131,6 +131,10 @@ footer {
   gap: 1rem;
 }
 
+.taskEvents > button {
+  border: 1px solid black;
+}
+
 @media (max-width: 768px) {
   html {
     font-size: 8px;
