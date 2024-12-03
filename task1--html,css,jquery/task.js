@@ -1,11 +1,18 @@
 class Task {
-  constructor(id, description, createdAt, dueDate) {
+  constructor(
+    id,
+    description,
+    createdAt,
+    dueDate,
+    completed = false,
+    completedAt = null
+  ) {
     this.id = id;
     this.description = description;
     this.createdAt = createdAt;
-    this.completed = false;
     this.dueDate = dueDate;
-    this.completedAt = null;
+    this.completed = completed;
+    this.completedAt = completedAt;
   }
 
   toggleCompleted() {
