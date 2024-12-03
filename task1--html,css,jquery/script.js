@@ -1,5 +1,6 @@
 $("document").ready(function () {
   const tasks = [];
+
   const storedTasks = getLocalData();
   if (storedTasks?.length > 0) {
     storedTasks.forEach((task) => {
@@ -14,11 +15,6 @@ $("document").ready(function () {
     renderTasks(tasks);
     renderCompletedTasks(tasks);
   }
-  $("#taskDescription").on("keypress", function (event) {
-    if (event.key === "Enter") {
-      $("#addTaskBtn").click();
-    }
-  });
 
   $("#addTaskBtn").click(function () {
     const taskDescription = $("#taskDescription").val();
