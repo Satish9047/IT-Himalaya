@@ -16,6 +16,12 @@ $("document").ready(function () {
     renderCompletedTasks(tasks);
   }
 
+  $("#taskDescription").on("keydown", function (event) {
+    if (event.key === "Enter") {
+      $("#addTaskBtn").click();
+    }
+  });
+
   $("#addTaskBtn").click(function () {
     const taskDescription = $("#taskDescription").val();
     const createdAt = getFormattedDate();

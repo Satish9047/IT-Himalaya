@@ -42,23 +42,26 @@ button{
 button:hover{
     background-color: #E78F81;
 }
+
  li{
     display: flex;
     flex-direction: column;
     padding: 1rem;
     border-radius: 1rem;
  }
+
  footer{
     padding: 1.4rem;
     font-size: 1.4rem;
     background-color: orange;
     text-align: center;
+    text-justify: justify;
   
  }
 
  #taskDescription{
     padding: 1rem 2rem;
-    font-size: 1.8rem;
+    font-size: 1.6rem;
     border: 1px solid black;
     border-radius: 1rem;
     }
@@ -95,10 +98,9 @@ button:hover{
 
 .taskInfo{
     position: relative;
+    display: flex;
     font-size: 1.4rem;
     color: #2A3335;
-    display: flex;
-    justify-content: flex-end;
     gap: 2rem;
 }
 .taskEvents{
@@ -110,6 +112,7 @@ button:hover{
     display:flex;
     gap: 2rem;
     width: max-content;
+    flex-wrap: wrap;    
   left: 0;
   bottom: 0;
 }
@@ -131,18 +134,49 @@ button:hover{
 }
 
 @media (max-width: 768px) {
+    html {
+        font-size: 8px;
+    }
+    main{
+        width: 100%;
+    }
+
+    button{
+        padding: 1rem 1rem;
+    }
+
+    #taskDescription{
+        width: 100%;
+    }
+
     .info {
-    position: relative;
-      gap:1rem;
+        position: relative;
+        gap:1rem;
     }
 
     .taskDetails{
         flex-direction: column;
         gap:1rem;
     }
+
     .taskEvents{
         display: flex;
         justify-content: end;
+    }
+
+    .addTaskDiv{
+        gap: 1rem;
+        padding: 0rem;
+    }
+  }
+
+  @media (min-width: 768px) {
+    main{
+        width: 80%;
+    }
+
+    #taskDescription{
+        min-width: 50%;
     }
   }
 
