@@ -16,7 +16,7 @@ $("document").ready(function () {
     // Retrieve tasks from local storage
     getTasksFromLocalForage().then((storedTasks) => {
       console.log("Stored data", storedTasks);
-      if (storedTasks && storedTasks.length > 0) {
+      if (storedTasks.length > 0) {
         storedTasks.forEach((task) => {
           const newTask = new Task(
             task.id,
@@ -34,6 +34,7 @@ $("document").ready(function () {
     });
   } catch (error) {
     console.error("Error initializing tasks:", error);
+    alert("Error initializing tasks. Please try again.");
   }
 
   // Add Task using Enter key
