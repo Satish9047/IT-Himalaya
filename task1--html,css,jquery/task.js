@@ -10,5 +10,6 @@ class Task {
 
   toggleCompleted() {
     this.completed = true;
+    this.completedAt = getFormattedDate();
   }
 }
