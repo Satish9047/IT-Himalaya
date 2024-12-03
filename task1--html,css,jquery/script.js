@@ -23,29 +23,9 @@ $("document").ready(function () {
   }
 
   // Add Task using Enter key
-  $("#taskDescription").on("keydown", function (event) {
-    if (event.key === "Enter") {
-      $("#addTaskBtn").click();
-    }
-  });
-
-  // Add Task
-  $("#addTaskBtn").click(function () {
-    const taskDescription = $("#taskDescription").val();
-    const createdAt = getFormattedDate();
-    const id = Date.now().toString();
-    const dueDate = getDueDate();
-
-    // Create new instance of Task Class
-    if (taskDescription.trim() !== "") {
-      const newTask = new Task(id, taskDescription, createdAt, dueDate);
-      tasks.push(newTask);
-      $("#taskDescription").val("");
-      setLocalData(tasks);
-    } else {
-      alert("Please enter a task description");
-    }
-    renderTasks(tasks);
+  $("form").on("submit", function (event) {
+    event.preventDefault();
+    addTask(tasks);
   });
 
   // Complete Task
@@ -53,7 +33,6 @@ $("document").ready(function () {
     const taskId = $(this).closest("li").data("id").toString();
     const task = tasks.find((task) => task.id === taskId);
     task.toggleCompleted();
-    task.completedAt = getFormattedDate();
     setLocalData(tasks);
     renderCompletedTasks(tasks);
     renderTasks(tasks);
@@ -61,7 +40,7 @@ $("document").ready(function () {
 
   // Delete Task
   $("#todoList").on("click", ".delete", function () {
-    const taskId = $(this).closest("li").data("id");
+    const taskId = $(this).closest("li").data("id").toString();
     deleteTask(tasks, taskId);
     setLocalData(tasks);
     renderTasks(tasks);
@@ -69,7 +48,7 @@ $("document").ready(function () {
 
   //Deleted completed task
   $("#completedList").on("click", ".delete", function () {
-    const taskId = $(this).closest("li").data("id");
+    const taskId = $(this).closest("li").data("id").toString();
     setLocalData(tasks);
     deleteCompletedTask(tasks, taskId);
   });
