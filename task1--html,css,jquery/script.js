@@ -1,25 +1,39 @@
 $("document").ready(function () {
   const tasks = [];
 
+  // Initialize localforage
+  localforage.config({
+    name: "Task Manager",
+    storeName: "tasks",
+    description: "Task manager application data",
+  });
+
   // Set current year in footer
   const currentDate = new Date();
   const formattedDate = currentDate.getFullYear();
   $("#copyRightDate").text(formattedDate);
-
-  // Retrieve tasks from local storage
-  const storedTasks = getLocalData();
-  if (storedTasks?.length > 0) {
-    storedTasks.forEach((task) => {
-      const newTask = new Task(
-        task.id,
-        task.description,
-        task.createdAt,
-        task.dueDate
-      );
-      tasks.push(newTask);
+  try {
+    // Retrieve tasks from local storage
+    getTasksFromLocalForage().then((storedTasks) => {
+      console.log("Stored data", storedTasks);
+      if (storedTasks && storedTasks.length > 0) {
+        storedTasks.forEach((task) => {
+          const newTask = new Task(
+            task.id,
+            task.description,
+            task.createdAt,
+            task.dueDate,
+            task.completed,
+            task.completedAt
+          );
+          tasks.push(newTask);
+        });
+      }
+      renderTasks(tasks);
+      renderCompletedTasks(tasks);
     });
-    renderTasks(tasks);
-    renderCompletedTasks(tasks);
+  } catch (error) {
+    console.error("Error initializing tasks:", error);
   }
 
   // Add Task using Enter key
@@ -33,7 +47,7 @@ $("document").ready(function () {
     const taskId = $(this).closest("li").data("id").toString();
     const task = tasks.find((task) => task.id === taskId);
     task.toggleCompleted();
-    setLocalData(tasks);
+    setTaskToLocalForage(tasks);
     renderCompletedTasks(tasks);
     renderTasks(tasks);
   });
@@ -41,15 +55,18 @@ $("document").ready(function () {
   // Delete Task
   $("#todoList").on("click", ".delete", function () {
     const taskId = $(this).closest("li").data("id").toString();
+    const taskElement = $(this).closest("li");
     deleteTask(tasks, taskId);
-    setLocalData(tasks);
-    renderTasks(tasks);
+    setTaskToLocalForage(tasks);
+    taskElement.remove();
   });
 
   //Deleted completed task
   $("#completedList").on("click", ".delete", function () {
     const taskId = $(this).closest("li").data("id").toString();
-    setLocalData(tasks);
+    const taskElement = $(this).closest("li");
+    setTaskToLocalForage(tasks);
     deleteCompletedTask(tasks, taskId);
+    taskElement.remove();
   });
 });
