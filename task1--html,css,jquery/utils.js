@@ -49,14 +49,11 @@ function renderCompletedTasks(tasks) {
 function deleteTask(tasks, taskId) {
   const taskIndex = tasks.findIndex((task) => task.id === taskId);
   tasks.splice(taskIndex, 1);
-  renderTasks(tasks);
-  renderCompletedTasks(tasks);
 }
 // Delete Completed Task  i created this just so we can render only completed tasks when require eg: deleting completed tasks doesn't required to re render todoTask list
 function deleteCompletedTask(tasks, taskId) {
   const taskIndex = tasks.findIndex((task) => task.id === taskId);
   tasks.splice(taskIndex, 1);
-  renderCompletedTasks(tasks);
 }
 
 // Format Date
@@ -83,7 +80,7 @@ function addTask(tasks) {
     const newTask = new Task(id, taskDescription, createdAt, dueDate);
     tasks.push(newTask);
     $("#taskDescription").val("");
-    setLocalData(tasks);
+    setTaskToLocalForage(tasks);
     renderTasks(tasks);
   } else {
     alert("Please enter a task description");
@@ -114,4 +111,41 @@ function getLocalData() {
 
 function setLocalData(data) {
   localStorage.setItem("tasks", JSON.stringify(data));
+}
+
+//Set Data to LocalForage
+function setTaskToLocalForage(tasks) {
+  const tasksToSave = tasks.map((task) => ({
+    id: task.id,
+    description: task.description,
+    createdAt: task.createdAt,
+    dueDate: task.dueDate,
+    completed: task.completed,
+    completedAt: task.completedAt || null,
+  }));
+  localforage
+    .setItem("tasks", tasksToSave)
+    .then(() => {
+      console.log("Tasks saved successfully:", tasks);
+    })
+    .catch((err) => {
+      console.error("Error saving tasks:", err);
+    });
+}
+
+// Get Data from LocalForage
+async function getTasksFromLocalForage() {
+  return localforage
+    .getItem("tasks")
+    .then((tasksData) => {
+      if (!tasksData) {
+        return [];
+      } else {
+        return tasksData;
+      }
+    })
+    .catch((err) => {
+      console.error("Error retrieving tasks from localForage:", err);
+      return [];
+    });
 }
