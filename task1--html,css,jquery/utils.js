@@ -3,18 +3,18 @@ function renderTasks(tasks) {
   const todoTasks = tasks.filter((task) => !task.completed);
   $("#todoList").empty();
   todoTasks.map((task) => {
-    const taskHTML = `<li class="todoList" data-id="${task.id}">
-                <p>${task.description}</p>
-                <div class="taskDetails">
+    const taskHTML = `<li class="todoList bg-warning-subtle list-group-item shadow mb-3 rounded" data-id="${task.id}">
+                <p class="fs-5 ">${task.description}</p>
+                <div class="taskDetails d-flex flex-column flex-md-row justify-content-between lh-1">
                   <div class="taskInfo">
-                    <div class="info">
-                      <p>CreatedAt:${task.createdAt}</p>
-                      <p>Due:${task.dueDate}</p>
+                    <div class="info d-flex flex-column flex-md-row text-light-emphasis gap-md-3">
+                      <p class="pb-md-0">CreatedAt:${task.createdAt}</p>
+                      <p class ="pb-md-0">Due:${task.dueDate}</p>
                     </div>
                   </div>
-                  <div class="taskEvents">
-                    <button class="delete">Delete</button>
-                    <button class="complete">Completed</button>
+                  <div class="taskEvents d-flex flex-row gap-2 gap-md-3">
+                    <button class="delete btn btn-warning shadow">Delete</button>
+                    <button class="complete btn btn-primary shadow">Completed</button>
                   </div>
                 </div>
               </li>`;
@@ -26,18 +26,18 @@ function renderCompletedTasks(tasks) {
   const completedTasks = tasks.filter((task) => task.completed);
   $("#completedList").empty();
   completedTasks.map((task) => {
-    const taskHTML = `<li class="completedList" data-id="${task.id}">
-                <p>${task.description}</p>
-                <div class="taskDetails">
+    const taskHTML = `<li class="todoList bg-dark-subtle  list-group-item shadow mb-3 rounded" data-id="${task.id}">
+                <p class="fs-5 ">${task.description}</p>
+                <div class="taskDetails d-flex flex-column flex-md-row justify-content-between">
                   <div class="taskInfo">
-                    <div class="info">
+                    <div class="info d-flex flex-column flex-md-row text-light-emphasis gap-md-3">
                       <p>CreatedAt:${task.createdAt}</p>
                       <p>Due:${task.dueDate}</p>
                       <p>CompletedAt:${task.completedAt}</p>
                     </div>
                   </div>
                   <div class="taskEvents">
-                    <button class="delete">Delete</button>
+                    <button class="delete btn btn-warning shadow">Delete</button>
                   </div>
                 </div>
               </li>`;
