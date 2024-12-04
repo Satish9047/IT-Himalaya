@@ -28,7 +28,7 @@ function renderCompletedTasks(tasks) {
   completedTasks.map((task) => {
     const taskHTML = `<li class="todoList bg-dark-subtle  list-group-item shadow mb-3 rounded" data-id="${task.id}">
                 <p class="fs-5 ">${task.description}</p>
-                <div class="taskDetails d-flex flex-column flex-md-row justify-content-between">
+                <div class="taskDetails d-flex flex-column flex-md-row justify-content-between" >
                   <div class="taskInfo">
                     <div class="info d-flex flex-column flex-md-row text-light-emphasis gap-md-3">
                       <p>CreatedAt:${task.createdAt}</p>
@@ -36,8 +36,8 @@ function renderCompletedTasks(tasks) {
                       <p>CompletedAt:${task.completedAt}</p>
                     </div>
                   </div>
-                  <div class="taskEvents">
-                    <button class="delete btn btn-warning shadow">Delete</button>
+                   <div class="taskEvents d-flex flex-row justify-content-end">
+                    <button class="delete btn btn-warning shadow " >Delete</button>
                   </div>
                 </div>
               </li>`;
