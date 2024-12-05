@@ -22,3 +22,42 @@ function formatDate(date) {
 
   return `${year}/${month}/${day}-${hours}:${minutes}:${seconds}`;
 }
+
+//set task to the localforage
+function setTaskToLocalForage(tasks) {
+  const saveTasksToLocalForage = tasks.map((task) => ({
+    id: task.id,
+    description: task.description,
+    createdAt: task.createdAt,
+    dueDate: task.dueDate,
+    completed: task.completed,
+    completedAt: task.completedAt || null,
+  }));
+
+  localforage
+    .setItem("tasks", saveTasksToLocalForage)
+    .then(() => {
+      console.log("Tasks saved in localforage:", tasks);
+    })
+    .catch((error) => {
+      console.error("Error saving tasks in localforage", error);
+    });
+}
+
+//Get Task from the localforage
+
+function getTasksFromLocalForage() {
+  return localforage
+    .getItem("tasks")
+    .then((tasks) => {
+      if (!tasks) {
+        return [];
+      } else {
+        return tasks;
+      }
+    })
+    .catch((error) => {
+      console.error("Error getting tasks from localforage", error);
+      return [];
+    });
+}
