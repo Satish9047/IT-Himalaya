@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" ng-app>
+<html lang="en" ng-app="taskManager">
   <!-- ng-app is the directive -->
   <head>
     <meta charset="UTF-8" />
@@ -12,8 +12,11 @@
       crossorigin="anonymous"
     />
     <script src="app\lib\angular.min.js"></script>
+    <script src="app\tasks.js"></script>
+    <script src="app\app.js"></script>
+    <script src="app\utils.js"></script>
   </head>
-  <body class="bg-body">
+  <body class="bg-body" ng-controller="TaskController">
     <!-- Header -->
     <header class="bg-primary mb-1">
       <div class="container p-2">
@@ -27,6 +30,7 @@
 
       <!-- Add Task -->
       <form
+        ng-submit="addTask()"
         class="addTaskDiv d-flex flex-row justify-content-center gap-3 mb-3"
       >
         <!-- ng-model is use to bind the input value to the taskDescription -->
@@ -50,13 +54,44 @@
         <!-- Todo Task -->
         <div>
           <h3 class="fs-4">ToDo task</h3>
-          <ol id="todoList" class="list-group"></ol>
+          <ol id="todoList" class="list-group">
+            <li ng-repeat="task in tasks" class="bg-warning-subtle list-group-item shadow mb-3 rounded" ng-hide="task.completed">
+              <p class="fs-5">{{task.description}}</p>
+                <div class="taskDetails d-flex flex-column flex-md-row justify-content-between lh-1">
+                  <div class="taskInfo">
+                    <div class="info d-flex flex-column flex-md-row text-light-emphasis gap-md-3">
+                      <p class="pb-md-0">createdAt: {{task.createdAt}}</p>
+                      <p class ="pb-md-0">Due: {{task.dueDate}}</p>
+                    </div>
+                  </div>
+                  <div class="taskEvents d-flex flex-row gap-2 gap-md-3">
+                    <button class="btn btn-warning shadow" ng-click="deleteTask(task.id)">Delete</button>
+                    <button class=" btn btn-primary shadow" ng-click="sendTaskToCompleted(task.id)">Completed</button>
+                  </div>
+            </li>
+          </ol>
         </div>
 
         <!-- Completed Task -->
         <div>
           <h3 class="fs-4">Completed Task</h3>
-          <ol id="completedList" class="list-group"></ol>
+          <ol id="completedList" class="list-group">
+            <li class=" bg-dark-subtle  list-group-item shadow mb-3 rounded" ng-repeat="task in tasks" ng-show="task.completed">
+              <p class="fs-5">{{task.description}}</p>
+              <div class="taskDetails d-flex flex-column flex-md-row justify-content-between" >
+                <div class="taskInfo">
+                  <div class="info d-flex flex-column flex-md-row text-light-emphasis gap-md-3">
+                    <p>CreatedAt:{{task.createdAt}}</p>
+                    <p>Due:{{task.dueDate}}</p>
+                    <p>CompletedAt:{{task.completedAt}}</p>
+                  </div>
+                </div>
+                 <div class="taskEvents d-flex flex-row justify-content-end">
+                  <button class="btn btn-warning shadow" ng-click="deleteTask(task.id)">Delete</button>
+                </div>
+              </div>
+            </li>
+          </ol>
         </div>
       </div>
     </main>
