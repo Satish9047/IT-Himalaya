@@ -23,7 +23,10 @@ function formatDate(date) {
   return `${year}/${month}/${day}-${hours}:${minutes}:${seconds}`;
 }
 
-//set task to the localforage
+/**
+ * @desc   Set the tasks Array into LocalForage
+ * @param  Array of tasks
+ */
 function setTaskToLocalForage(tasks) {
   const saveTasksToLocalForage = tasks.map((task) => ({
     id: task.id,
@@ -44,8 +47,10 @@ function setTaskToLocalForage(tasks) {
     });
 }
 
-//Get Task from the localforage
-
+/**
+ * @desc    Get tasks from localForage
+ * @returns Array[Task] || []
+ */
 function getTasksFromLocalForage() {
   return localforage
     .getItem("tasks")
