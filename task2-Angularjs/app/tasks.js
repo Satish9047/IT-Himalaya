@@ -7,7 +7,8 @@ class Task {
     completed = false,
     completedAt = null
   ) {
-    (this.id = id), (this.description = description);
+    this.id = id;
+    this.description = description;
     this.createdAt = createdAt;
     this.dueDate = dueDate;
     this.completed = completed;
