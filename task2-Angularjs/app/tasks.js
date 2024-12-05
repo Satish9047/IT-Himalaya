@@ -1,3 +1,12 @@
+/**
+ * desc   Class of Task
+ * @param id
+ * @param description
+ * @param createdAt
+ * @param dueDate
+ * @param completed   optional
+ * @param completedAt optional
+ */
 class Task {
   constructor(
     id,
