@@ -2,10 +2,9 @@
 
 <div>
   <h3 class="fs-4">ToDo Task</h3>
-  <ol class="list-group">
+  <ol class="list-group" style="min-height: 200px">
     <li
-      ng-repeat="task in $TodoCtrl.todoTasks"
-      ng-hide="task.completed"
+      ng-repeat="task in $TodoCtrl.taskList | filter: { completed: false }"
       class="list-group-item bg-warning-subtle shadow mb-3 rounded"
     >
       <p class="fs-5">{{ task.description }}</p>
@@ -21,12 +20,15 @@
           </div>
         </div>
         <div>
-          <button class="btn btn-warning shadow" ng-click="deleteTask(task.id)">
+          <button
+            class="btn btn-warning shadow"
+            ng-click="$TodoCtrl.deleteTask(task.id)"
+          >
             Delete
           </button>
           <button
             class="btn btn-primary shadow"
-            ng-click="sendTaskToCompleted(task.id)"
+            ng-click="$TodoCtrl.sendTaskToCompleted(task.id)"
           >
             Completed
           </button>

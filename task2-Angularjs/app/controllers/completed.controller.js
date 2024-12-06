@@ -10,6 +10,7 @@ taskManager.controller("completedTaskController", [
 
     $CompletedCtrl.deleteTask = function (taskId) {
       taskService.deleteTask(taskId);
+      $CompletedCtrl.completedTaskList = taskService.getTasks();
     };
   },
 ]);

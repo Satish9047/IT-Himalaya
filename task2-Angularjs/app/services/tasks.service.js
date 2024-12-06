@@ -1,19 +1,10 @@
 taskManager.service("taskService", [
   "localForage",
   function (localForage) {
-    const tasks = [
-      {
-        id: 1,
-        description: "Task 1",
-        createdAt: "2023-08-01",
-        dueDate: "2023-08-05",
-        completed: false,
-        completedAt: null,
-      },
-    ];
+    const tasks = [];
 
     function loadTasks() {
-      getTasksFromLocalForage().then((tasks) => {
+      getTasksFromLocalForage(localForage).then((tasks) => {
         if (tasks.length > 0) {
           tasks.forEach((task) => {
             const loadTask = new Task(
@@ -24,7 +15,7 @@ taskManager.service("taskService", [
               task.completed || false,
               task.completedAt || null
             );
-            this.tasks.push(loadTask);
+            tasks.push(loadTask);
           });
         }
       });
@@ -33,15 +24,12 @@ taskManager.service("taskService", [
     loadTasks();
 
     this.getTasks = function () {
-      console.log("Tasks get:", tasks);
-
       return tasks;
     };
 
     this.addTask = function (newTask) {
       tasks.push(newTask);
       setTaskToLocalForage(tasks, localForage);
-      console.log("Tasks add:", tasks);
     };
 
     this.deleteTask = function (taskId) {
@@ -52,7 +40,7 @@ taskManager.service("taskService", [
 
     this.sendToCompleted = function (taskId) {
       const task = tasks.find((task) => task.id === taskId);
-      task.toggleToCompletedTask(task);
+      task.toggleToCompletedTask();
       setTaskToLocalForage(tasks, localForage);
     };
   },

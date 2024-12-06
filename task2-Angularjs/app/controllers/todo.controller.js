@@ -11,10 +11,12 @@ taskManager.controller("todoTaskController", [
 
     $TodoCtrl.deleteTask = function (taskId) {
       taskService.deleteTask(taskId);
+      $TodoCtrl.taskList = taskService.getTasks();
     };
 
     $TodoCtrl.sendTaskToCompleted = function (taskId) {
       taskService.sendToCompleted(taskId);
+      $TodoCtrl.taskList = taskService.getTasks();
     };
   },
 ]);

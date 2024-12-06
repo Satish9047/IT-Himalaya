@@ -1,10 +1,9 @@
 <div>
   <h3 class="fs-4">Completed Task</h3>
-  <ol id="completedList" class="list-group">
+  <ol id="completedList" class="list-group" style="min-height: 200px">
     <li
       class="list-group-item bg-dark-subtle shadow mb-3 rounded"
-      ng-repeat="task in tasks"
-      ng-show="task.completed"
+      ng-repeat="task in $CompletedCtrl.completedTaskList | filter: { completed: true }"
     >
       <p class="fs-5">{{ task.description }}</p>
       <div class="d-flex flex-column flex-md-row justify-content-between">
@@ -18,7 +17,10 @@
           </div>
         </div>
         <div class="d-flex flex-row justify-content-end">
-          <button class="btn btn-warning shadow" ng-click="deleteTask(task.id)">
+          <button
+            class="btn btn-warning shadow"
+            ng-click="$CompletedCtrl.deleteTask(task.id)"
+          >
             Delete
           </button>
         </div>
