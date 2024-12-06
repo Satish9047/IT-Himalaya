@@ -1,12 +1,13 @@
 taskManager.service("taskService", [
-  "localForage",
-  function (localForage) {
+  "localforage",
+  function (localforage) {
     const tasks = [];
-
+    // debugger;
     function loadTasks() {
-      getTasksFromLocalForage(localForage).then((tasks) => {
-        if (tasks.length > 0) {
-          tasks.forEach((task) => {
+      getTasksFromLocalForage(localforage).then((taskData) => {
+        console.log("taskData", taskData);
+        if (taskData.length > 0) {
+          taskData.forEach((task) => {
             const loadTask = new Task(
               task.id,
               task.description,
@@ -17,6 +18,7 @@ taskManager.service("taskService", [
             );
             tasks.push(loadTask);
           });
+          // console.log("tasks", tasks);
         }
       });
     }
@@ -29,19 +31,19 @@ taskManager.service("taskService", [
 
     this.addTask = function (newTask) {
       tasks.push(newTask);
-      setTaskToLocalForage(tasks, localForage);
+      setTaskToLocalForage(tasks, localforage);
     };
 
     this.deleteTask = function (taskId) {
       const taskIndex = tasks.findIndex((task) => task.id == taskId);
       tasks.splice(taskIndex, 1);
-      setTaskToLocalForage(tasks, localForage);
+      setTaskToLocalForage(tasks, localforage);
     };
 
     this.sendToCompleted = function (taskId) {
       const task = tasks.find((task) => task.id === taskId);
       task.toggleToCompletedTask();
-      setTaskToLocalForage(tasks, localForage);
+      setTaskToLocalForage(tasks, localforage);
     };
   },
 ]);
