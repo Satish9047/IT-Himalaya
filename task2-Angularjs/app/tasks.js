@@ -24,7 +24,7 @@ class Task {
     this.completedAt = completedAt;
   }
 
-  toggleComplete() {
+  toggleToCompletedTask() {
     this.completed = true;
     this.completedAt = getFormattedDate();
   }
