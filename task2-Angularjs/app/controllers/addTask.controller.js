@@ -1,6 +1,7 @@
 taskManager.controller("addTaskController", [
   "$scope",
   "taskService",
+  "localForage",
   function ($scope, taskService) {
     const $AddCtrl = this;
     this.taskDescription = "";
