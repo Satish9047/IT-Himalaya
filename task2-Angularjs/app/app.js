@@ -10,7 +10,7 @@ taskManager.config([
       description: "Task Manager using Angular JS",
     });
 
-    $provide.factory("localForage", function () {
+    $provide.factory("localforage", function () {
       return localforage;
     });
   },
