@@ -1,7 +1,13 @@
 <div>
   <h3 class="fs-4">Completed Task</h3>
   <ol id="completedList" class="list-group" style="min-height: 200px">
-    <div ng-if="$CompletedCtrl.completedTaskList.length === 0">
+    <div
+      class="text-center"
+      ng-if="
+        ($CompletedCtrl.completedTaskList | filter: { completed: true })
+          .length === 0
+      "
+    >
       <p>no task completed</p>
     </div>
     <li

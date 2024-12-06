@@ -3,7 +3,10 @@
 <div>
   <h3 class="fs-4">ToDo Task</h3>
   <ol class="list-group" style="min-height: 200px">
-    <div ng-if="$TodoCtrl.taskList.length === 0">
+    <div
+      class="text-center"
+      ng-if="($TodoCtrl.taskList | filter: { completed: false }).length === 0"
+    >
       <p>empty task</p>
     </div>
     <li

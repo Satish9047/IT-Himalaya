@@ -6,7 +6,6 @@ taskManager.controller("completedTaskController", [
     $CompletedCtrl.completedTaskList = [];
 
     $CompletedCtrl.completedTaskList = taskService.getTasks();
-    console.log($CompletedCtrl.taskList);
 
     $CompletedCtrl.deleteTask = function (taskId) {
       taskService.deleteTask(taskId);
