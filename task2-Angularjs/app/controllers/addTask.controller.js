@@ -1,7 +1,7 @@
 taskManager.controller("addTaskController", [
   "$scope",
   "taskService",
-  "localForage",
+  "localforage",
   function ($scope, taskService) {
     const $AddCtrl = this;
     this.taskDescription = "";
@@ -17,6 +17,7 @@ taskManager.controller("addTaskController", [
       const newTask = new Task(id, description, createdAt, dueDate);
 
       taskService.addTask(newTask);
+      this.taskDescription = "";
     };
   },
 ]);

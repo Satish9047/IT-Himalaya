@@ -51,8 +51,8 @@ function setTaskToLocalForage(tasks, localForage) {
  * @desc    Get tasks from localForage
  * @returns Array[Task] || []
  */
-function getTasksFromLocalForage(localForage) {
-  return localForage
+function getTasksFromLocalForage(localforage) {
+  return localforage
     .getItem("tasks")
     .then((tasks) => {
       if (!tasks) {

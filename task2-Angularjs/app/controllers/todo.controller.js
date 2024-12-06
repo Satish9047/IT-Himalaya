@@ -1,13 +1,14 @@
 taskManager.controller("todoTaskController", [
   "$scope",
   "taskService",
-  function ($scope, taskService) {
+  "localforage",
+  function ($scope, taskService, localforage) {
     const $TodoCtrl = this;
     $TodoCtrl.taskList = [];
 
     // Get tasks from the service
     $TodoCtrl.taskList = taskService.getTasks();
-    console.log($TodoCtrl.taskList);
+    console.log("todo", $TodoCtrl.taskList);
 
     $TodoCtrl.deleteTask = function (taskId) {
       taskService.deleteTask(taskId);
