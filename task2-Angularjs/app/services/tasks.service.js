@@ -3,8 +3,8 @@ taskManager.service("taskService", [
   function (localforage) {
     const tasks = [];
     // debugger;
-    function loadTasks() {
-      getTasksFromLocalForage(localforage).then((taskData) => {
+    this.loadTask = function loadTasks() {
+      return getTasksFromLocalForage(localforage).then((taskData) => {
         console.log("taskData", taskData);
         if (taskData.length > 0) {
           taskData.forEach((task) => {
@@ -21,9 +21,9 @@ taskManager.service("taskService", [
           // console.log("tasks", tasks);
         }
       });
-    }
+    };
 
-    loadTasks();
+    // this.loadTasks();
 
     this.getTasks = function () {
       return tasks;
