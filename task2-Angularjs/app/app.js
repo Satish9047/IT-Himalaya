@@ -17,19 +17,25 @@ taskManager.config([
 ]);
 
 taskManager.component("addTask", {
-  templateUrl: "./app/components/addTask.component.html",
+  templateUrl: "./app/components/addTask/addTask.template.html",
   controller: "addTaskController",
   controllerAs: "$AddCtrl",
 });
 
 taskManager.component("todoTask", {
-  templateUrl: "./app/components/todo.component.html",
+  templateUrl: "./app/components/todoTask/todo.template.html",
   controller: "todoTaskController",
   controllerAs: "$TodoCtrl",
 });
 
 taskManager.component("completedTask", {
-  templateUrl: "./app/components/completed.component.html",
+  templateUrl: "./app/components/completedTask/completed.template.html",
   controller: "completedTaskController",
   controllerAs: "$CompletedCtrl",
+});
+
+taskManager.component("appFooter", {
+  templateUrl: "./app/components/footer/footer.template.html",
+  controller: "footerDateController",
+  controllerAs: "$DateCtrl",
 });
