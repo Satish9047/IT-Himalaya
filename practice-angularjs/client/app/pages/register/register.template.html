@@ -1,0 +1,17 @@
+<div
+  class="container d-flex justify-content-center align-items-center"
+  style="min-height: 100vh"
+>
+  {{$Register.message}}
+  <form ng-submit="$Register.onRegister()">
+    <h2>Register You</h2>
+    <div>
+      <label for="email">Email</label>
+      <input type="email" id="email" />
+    </div>
+    <div>
+      <label for="password">Password</label>
+      <input type="password" id="password" />
+    </div>
+  </form>
+</div>
