@@ -1,11 +1,41 @@
-<p>{{$LoginCtrl.message}}</p>
-<form ng-submit="$LoginCtrl.onRegister()">
-  <div>
-    <label for="email">Email</label>
-    <input type="email" id="email" />
+<div class="container d-flex justify-content-center align-items-center vh-100">
+  <div class="card shadow-lg p-4" style="width: 100%; max-width: 500px">
+    <h2 class="text-center mb-2">Login</h2>
+
+    <form
+      ng-submit="$LoginCtrl.onLogin($event)"
+      class="row g-3 needs-validation"
+      novalidate
+    >
+      <!-- Email -->
+      <div>
+        <label for="email" class="form-label">Email</label>
+        <input
+          type="email"
+          id="email"
+          class="form-control"
+          ng-required="true"
+          ng-model="$LoginCtrl.user.email"
+          placeholder="example@profiler.com"
+        />
+      </div>
+
+      <!-- Password -->
+      <div>
+        <label for="password" class="form-label">Password</label>
+        <input
+          type="password"
+          id="password"
+          class="form-control"
+          ng-required="true"
+          ng-model="$LoginCtrl.user.password"
+          placeholder="******"
+          min="8"
+        />
+      </div>
+      <div class="d-flex justify-content-end">
+        <button type="submit" class="btn btn-primary">Login</button>
+      </div>
+    </form>
   </div>
-  <div>
-    <label for="password">Password</label>
-    <input type="password" id="password" />
-  </div>
-</form>
+</div>
