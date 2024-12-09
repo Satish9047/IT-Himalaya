@@ -1,5 +1,21 @@
 let app = angular.module("app", ["ui.router"]);
 
+// Local Forage configuration
+// app.config([
+//   "$provide",
+//   function ($provide) {
+//     localforage.config({
+//       name: "Profiler ",
+//       storeName: "Users",
+//       description: "Users IndexedDB Database",
+//     });
+
+//     $provide.factory("localforage", function () {
+//       return localforage;
+//     });
+//   },
+// ]);
+
 //Router Configuration
 app.config([
   "$stateProvider",
