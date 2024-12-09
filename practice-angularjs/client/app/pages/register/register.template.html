@@ -4,6 +4,7 @@
     <form
       ng-submit="$RegisterCtrl.onRegister($event)"
       class="row g-3 needs-validation"
+      name="form"
       novalidate
     >
       <!-- First Name -->
@@ -12,11 +13,17 @@
         <input
           type="text"
           id="fname"
+          name="fname"
           ng-required="true"
           class="form-control"
           ng-model="$RegisterCtrl.user.firstName"
           placeholder="first name"
         />
+        <div ng-show="form.$submitted || form.fname.$touched">
+          <span ng-show="form.fname.$error.required" class="text-danger"
+            >Email is Mandatory</span
+          >
+        </div>
       </div>
 
       <!-- Last Name -->
@@ -25,11 +32,17 @@
         <input
           type="text"
           id="lname"
+          name="lname"
           ng-required="true"
           class="form-control"
           ng-model="$RegisterCtrl.user.lastName"
           placeholder="last name"
         />
+        <div ng-show="form.$submitted || form.lname.$touched">
+          <span ng-show="form.lname.$error.required" class="text-danger"
+            >Email is Mandatory</span
+          >
+        </div>
       </div>
 
       <!-- Email -->
@@ -38,11 +51,20 @@
         <input
           type="email"
           id="email"
+          name="email"
           ng-required="true"
           class="form-control"
           ng-model="$RegisterCtrl.user.email"
           placeholder="email"
         />
+        <div ng-show="form.$submitted || form.email.$touched">
+          <span ng-show="form.email.$error.required" class="text-danger"
+            >Email is Mandatory</span
+          >
+          <span ng-show="form.email.$error.email" class="text-danger"
+            >Invalid Email</span
+          >
+        </div>
       </div>
 
       <!-- Password -->
@@ -51,17 +73,33 @@
         <input
           type="password"
           id="password"
+          name="password"
           ng-required="true"
           class="form-control"
           ng-model="$RegisterCtrl.user.password"
           placeholder="Enter password"
-          min="8"
+          ng-minlength="8"
         />
+        <div ng-show="form.$submitted || form.password.$touched">
+          <span ng-show="form.password.$error.required" class="text-danger"
+            >Email is Mandatory</span
+          >
+          <span ng-show="form.password.$error.minlength" class="text-danger"
+            >Password must be at least 8 characters</span
+          >
+        </div>
       </div>
 
       <!-- Submit Button -->
       <div class="d-flex justify-content-end">
-        <button class="btn btn-primary" type="submit">Register</button>
+        <button
+          class="btn"
+          type="submit"
+          ng-class="form.$invalid ? 'btn-secondary' : 'btn-primary'"
+          ng-disabled="form.$invalid"
+        >
+          Register
+        </button>
       </div>
     </form>
   </div>

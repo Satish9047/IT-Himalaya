@@ -4,6 +4,7 @@
 
     <form
       ng-submit="$LoginCtrl.onLogin($event)"
+      name="form"
       class="row g-3 needs-validation"
       novalidate
     >
@@ -13,11 +14,20 @@
         <input
           type="email"
           id="email"
+          name="email"
           class="form-control"
           ng-required="true"
           ng-model="$LoginCtrl.user.email"
           placeholder="example@profiler.com"
         />
+        <div ng-show="form.$submitted || form.email.$touched">
+          <span ng-show="form.email.$error.required" class="text-danger"
+            >Email is Mandatory</span
+          >
+          <span ng-show="form.email.$error.email" class="text-danger"
+            >Invalid Email</span
+          >
+        </div>
       </div>
 
       <!-- Password -->
@@ -26,12 +36,21 @@
         <input
           type="password"
           id="password"
+          name="password"
           class="form-control"
           ng-required="true"
           ng-model="$LoginCtrl.user.password"
           placeholder="******"
-          min="8"
+          ng-minlength="8"
         />
+        <div ng-show="form.$submitted || form.password.$touched">
+          <span ng-show="form.password.$error.required" class="text-danger"
+            >Email is Mandatory</span
+          >
+          <span ng-show="form.password.$error.minlength" class="text-danger"
+            >Password must be at least 8 characters</span
+          >
+        </div>
       </div>
       <div class="d-flex justify-content-end">
         <button type="submit" class="btn btn-primary">Login</button>
