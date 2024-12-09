@@ -1,24 +1,35 @@
 app.service("userService", [
   "localForage",
-  function (localStorage) {
-    this.isLoggedIn = function () {
-      //   check if user is logged in
-    };
+  function (localforage) {
+    this.user = [
+      {
+        fname: "admin",
+        lname: "admin",
+        email: "admin@gmail.com",
+        password: "admin123",
+      },
+    ];
 
-    this.register = function (user) {
-      //   register user functionality
-    };
+    this.getUser = () => {
+      return this.user.map((user) => {
+        const storedName = user.email.replace("@", "").replace(".", "");
+        const storeInstance = localforage.createInstance({
+          name: `User_${storedName}`,
+          storeName: storedName,
+          description: `Data for ${user.email}`,
+        });
 
-    this.login = function (user) {
-      //login functionality
-    };
+        return storeInstance.getItem(user.email).then((storedUserData) => {
+          if (storedUserData) {
+            return { ...storedUserData, password: undefined };
+          }
+          return null;
+        });
+      });
 
-    this.getUser = function () {
-      //  get user functionality
-    };
-
-    this.logout = function () {
-      //   logout functionality
+      // return this.user.map((user) => {
+      //   delete user.password;
+      // });
     };
   },
 ]);
