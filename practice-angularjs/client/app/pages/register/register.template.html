@@ -1,17 +1,68 @@
-<div
-  class="container d-flex justify-content-center align-items-center"
-  style="min-height: 100vh"
->
-  {{$Register.message}}
-  <form ng-submit="$Register.onRegister()">
-    <h2>Register You</h2>
-    <div>
-      <label for="email">Email</label>
-      <input type="email" id="email" />
-    </div>
-    <div>
-      <label for="password">Password</label>
-      <input type="password" id="password" />
-    </div>
-  </form>
+<div class="container d-flex justify-content-center align-items-center vh-100">
+  <div class="card shadow-lg p-4" style="width: 100%; max-width: 500px">
+    <h2 class="text-center mb-2">Register</h2>
+    <form
+      ng-submit="$RegisterCtrl.onRegister($event)"
+      class="row g-3 needs-validation"
+      novalidate
+    >
+      <!-- First Name -->
+      <div class="">
+        <label for="fname" class="form-label">First Name</label>
+        <input
+          type="text"
+          id="fname"
+          ng-required="true"
+          class="form-control"
+          ng-model="$RegisterCtrl.user.firstName"
+          placeholder="first name"
+        />
+      </div>
+
+      <!-- Last Name -->
+      <div class="">
+        <label for="lname" class="form-label">Last Name</label>
+        <input
+          type="text"
+          id="lname"
+          ng-required="true"
+          class="form-control"
+          ng-model="$RegisterCtrl.user.lastName"
+          placeholder="last name"
+        />
+      </div>
+
+      <!-- Email -->
+      <div class="">
+        <label for="email" class="form-label">Email</label>
+        <input
+          type="email"
+          id="email"
+          ng-required="true"
+          class="form-control"
+          ng-model="$RegisterCtrl.user.email"
+          placeholder="email"
+        />
+      </div>
+
+      <!-- Password -->
+      <div class="">
+        <label for="password" class="form-label">Password</label>
+        <input
+          type="password"
+          id="password"
+          ng-required="true"
+          class="form-control"
+          ng-model="$RegisterCtrl.user.password"
+          placeholder="Enter password"
+          min="8"
+        />
+      </div>
+
+      <!-- Submit Button -->
+      <div class="d-flex justify-content-end">
+        <button class="btn btn-primary" type="submit">Register</button>
+      </div>
+    </form>
+  </div>
 </div>
