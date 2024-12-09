@@ -6,8 +6,9 @@
     <link rel="stylesheet" href="styles.css" />
 
     <!-- Angular -->
-    <!-- <script src="app\lib\angular.min.js" type="text/javascript"></script> -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.2/angular.min.js"></script>
+
+    <!-- UI-Router -->
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/1.1.1/angular-ui-router.js"
       integrity="sha512-SXH6PKPkx9Trt7zW4I2swUyJET7LQqHNLQZc+xALR4KnCVMydFXG2W+7RKqnNgjvsT/Gy8ZjKFkJZLIReNJ4tA=="
@@ -15,8 +16,9 @@
       referrerpolicy="no-referrer"
     ></script>
 
-    <!-- UI-Router -->
-    <!-- <script src="//unpkg.com/@uirouter/angularjs@1.0.7/release/angular-ui-router.min.js"></script> -->
+    <!-- localforage -->
+    <script src="app\lib\localforage.min.js" type="text/javascript"></script>
+
     <!-- ocLazyLoad -->
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/oclazyload/1.1.0/ocLazyLoad.min.js"
@@ -24,6 +26,7 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     ></script>
+
     <!-- bootstrap -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
@@ -51,6 +54,9 @@
       src="app\pages\dashboard\dashboard.controller.js"
       type="text/javascript"
     ></script>
+    <script src="app\services\auth.service.js" type="text/javascript"></script>
+    <script src="app\services\user.service.js" type="text/javascript"></script>
+    <script src="app\utils\helper.js" type="text/javascript"></script>
     <title>Angular app</title>
   </head>
   <body>
