@@ -1,17 +1,27 @@
-// Get Formatted Date
+/**
+ * @description  Get Current Date
+ * @returns     "Date" format of YYYY/MM/DD-HH:MM:SS
+ */
 function getFormattedDate() {
   const now = new Date();
   return formatDate(now);
 }
 
-// Get Due Date
+/**
+ * @description  Get Due Date 1 day from now
+ * @returns      "Date" format of YYYY/MM/DD-HH:MM:SS
+ */
 function getDueDate() {
   const now = new Date();
   now.setDate(now.getDate() + 1);
   return formatDate(now);
 }
 
-// Format Date
+/**
+ *@description  Format the date to YYYY/MM/DD-HH:MM:SS
+ * @param       Date
+ * @returns     "Date" format of YYYY/MM/DD-HH:MM:SS
+ */
 function formatDate(date) {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1);
@@ -26,6 +36,7 @@ function formatDate(date) {
 /**
  * @desc   Set the tasks Array into LocalForage
  * @param  Array of tasks
+ * @param  localForage function
  */
 function setTaskToLocalForage(tasks, localForage) {
   const saveTasksToLocalForage = tasks.map((task) => ({
@@ -49,6 +60,7 @@ function setTaskToLocalForage(tasks, localForage) {
 
 /**
  * @desc    Get tasks from localForage
+ * @param   localForage function
  * @returns Array[Task] || []
  */
 function getTasksFromLocalForage(localforage) {
