@@ -1,11 +1,23 @@
 <header>
   <div class="container d-flex justify-content-between align-items-center">
     <h2>Profiler</h2>
-    <div class="d-flex align-items-center gap-2">
-      <a href="/#!/login" class="btn btn-primary">Login</a>
-      <a href="/#!/register" class="btn btn-primary">Register</a>
+    <div class="d-flex align-items-center gap-2" ng-hide="$Ctrl.isLoggedIn">
+      <a
+        href="/#!/login"
+        ui-sref="login"
+        class="btn btn-primary"
+        ui-sref-active="btn-secondary"
+        >Login</a
+      >
+      <a
+        href="/#!/register"
+        ui-sref="register"
+        class="btn btn-primary"
+        ui-sref-active="btn-secondary"
+        >Register</a
+      >
     </div>
-    <div>
+    <div ng-show="$Ctrl.isLoggedIn">
       <p>Satish</p>
     </div>
   </div>

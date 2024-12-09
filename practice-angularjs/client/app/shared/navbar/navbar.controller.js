@@ -2,12 +2,11 @@ app.component("appNavbar", {
   templateUrl: "./app/shared/navbar/navbar.template.html",
   controllerAs: "$Ctrl",
   controller: [
-    "$scope",
-    function ($scope) {
-      const $Ctrl = this;
-      $Ctrl.message = "navbar works";
+    function (userService) {
+      this.user = {};
+      this.isLoggedIn = false;
 
-      console.log("navbar works");
+      // this.user = userService.getUser();
     },
   ],
 });
