@@ -1,40 +1,30 @@
-let app = angular.module("app", []);
+let app = angular.module("app", ["ui.router"]);
 
 //Router Configuration
 app.config([
-  $routerProvider,
-  function config($routerProvider) {
-    $routerProvider
-      .when("/", {
-        template: "<dashboard></dashboard>",
-      })
-      .when("/login", {
-        template: "<login></login>",
-      })
-      .when("/register", {
-        template: "<register></register>",
-      })
-      .otherwise({
-        redirectTo: "/",
-      });
+  "$stateProvider",
+  "$urlRouterProvider",
+  function config($stateProvider, $urlRouterProvider) {
+    $urlRouterProvider.otherwise("/");
+
+    $stateProvider.state("layout", {
+      abstract: true,
+      template: "<app-navbar></app-navbar>",
+    });
+    $stateProvider.state("dashboard", {
+      parent: "layout",
+      url: "/",
+      template: "<app-dashboard></app-dashboard>",
+    });
+    $stateProvider.state("register", {
+      parent: "layout",
+      url: "/register",
+      template: "<app-register></app-register>",
+    });
+    $stateProvider.state("login", {
+      parent: "layout",
+      url: "/login",
+      template: "<app-login></app-login>",
+    });
   },
 ]);
-
-// Components
-app.component("register", {
-  templateUrl: "/app/pages/register/register.template.html",
-  controller: "registerController",
-  controllerAs: "registerCtrl",
-});
-
-app.component("login", {
-  templateUrl: "/app/pages/login/login.template.html",
-  controller: "loginController",
-  controllerAs: "loginCtrl",
-});
-
-app.component("dashboard", {
-  templateUrl: "/app/pages/dashboard/dashboard.template.html",
-  controller: "registerController",
-  controllerAs: "dashboardCtrl",
-});
