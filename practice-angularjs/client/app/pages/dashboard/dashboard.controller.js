@@ -1,20 +1,41 @@
-angular.module("dashboardModule", []);
-app.component("appDashboard", {
+angular.module("dashboardModule", []).component("appDashboard", {
   templateUrl: "./app/pages/dashboard/dashboard.template.html",
   controllerAs: "$DashboardCtrl",
   controller: [
     "$scope",
+    "$state",
     "userService",
-    function ($scope, userService) {
+    function ($scope, $state, userService) {
       this.isLoggedIn = false;
       this.user = {};
 
-      userService.getUser().then((user) => {
+      const initializeData = (user) => {
         if (user) {
           this.user = user;
           this.isLoggedIn = true;
+        } else {
+          this.isLoggedIn = false;
+          this.user = {};
+          $state.go("login");
         }
-        $scope.$apply();
+      };
+
+      userService.getUser().then((user) => {
+        if (user) {
+          initializeData(user);
+        } else {
+          initializeData(null);
+        }
+      });
+
+      //Listen to user updated event
+      $scope.$on("user:updated", (event, user) => {
+        if (user.email) {
+          initializeData(user);
+          $scope.$apply();
+        } else {
+          initializeData(null);
+        }
       });
     },
   ],
