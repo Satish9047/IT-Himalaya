@@ -29,10 +29,14 @@ app.config([
         loadDashboardModule: [
           "$ocLazyLoad",
           function ($ocLazyLoad) {
-            return $ocLazyLoad.load([
-              "./app/pages/dashboard/dashboard.controller.js",
-              "./app/services/user.service.js",
-            ]);
+            return $ocLazyLoad.load({
+              name: "dashboardModule",
+              files: [
+                "./app/pages/dashboard/dashboard.controller.js",
+                "./app/services/user.service.js",
+                "./app/utils/helper.js",
+              ],
+            });
           },
         ],
       },
@@ -45,10 +49,14 @@ app.config([
         loadRegisterModule: [
           "$ocLazyLoad",
           function ($ocLazyLoad) {
-            return $ocLazyLoad.load([
-              "./app/pages/register/register.controller.js",
-              "./app/services/auth.service.js",
-            ]);
+            return $ocLazyLoad.load({
+              name: "registerModule",
+              files: [
+                "./app/pages/register/register.controller.js",
+                "./app/services/auth.service.js",
+                "./app/utils/helper.js",
+              ],
+            });
           },
         ],
       },
@@ -61,11 +69,14 @@ app.config([
         loadLoginModule: [
           "$ocLazyLoad",
           function ($ocLazyLoad) {
-            return $ocLazyLoad.load([
-              "./app/pages/login/login.controller.js",
-              "./app/services/auth.service.js",
-              "./app/services/user.service.js",
-            ]);
+            return $ocLazyLoad.load({
+              name: "loginModule",
+              files: [
+                "./app/pages/login/login.controller.js",
+                "./app/services/auth.service.js",
+                "./app/services/user.service.js",
+              ],
+            });
           },
         ],
       },
