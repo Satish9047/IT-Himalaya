@@ -5,12 +5,7 @@ app.service("authService", [
     //Register User
     this.registerUser = (user) => {
       //setup localforage instance
-      const storeName = user.email.replace("@", "").replace(".", "");
-      const storeInstance = localforage.createInstance({
-        name: `Users`,
-        storeName,
-        description: `Data for ${user.email}`,
-      });
+      const storeInstance = getStoreInstance(user);
 
       // Store user data in Users store
       return storeInstance
@@ -28,12 +23,7 @@ app.service("authService", [
     //Login User
     this.loginUser = (user) => {
       //setup localforage instance
-      const storeName = user.email.replace("@", "").replace(".", "");
-      const storeInstance = localforage.createInstance({
-        name: `Users`,
-        storeName,
-        description: `Data for ${user.email}`,
-      });
+      const storeInstance = getStoreInstance(user);
 
       // Retrieve user data from Users store
       return storeInstance.getItem("userDetails").then((storedUserData) => {

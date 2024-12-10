@@ -1,7 +1,7 @@
 function getStoreInstance(user) {
   const storeName = user.email.replace("@", "").replace(".", "");
   const storeInstance = localforage.createInstance({
-    name: `User_${storeName}`,
+    name: `Users`,
     storeName,
     description: `Data for ${user.email}`,
   });

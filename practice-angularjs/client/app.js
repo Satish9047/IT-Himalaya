@@ -4,12 +4,6 @@ let app = angular.module("app", ["ui.router", "oc.lazyLoad"]);
 app.config([
   "$provide",
   function ($provide) {
-    localforage.config({
-      name: "Profiler ",
-      storeName: "Users",
-      description: "Users IndexedDB Database",
-    });
-
     $provide.factory("localforage", function () {
       return localforage;
     });
