@@ -1,7 +1,7 @@
 <header>
   <div class="container d-flex justify-content-between align-items-center">
     <h2>Profiler</h2>
-    <div class="d-flex align-items-center gap-2" ng-hide="$Ctrl.isLoggedIn">
+    <div class="d-flex align-items-center gap-2" ng-if="!$Ctrl.isLoggedIn">
       <a
         href="/#!/login"
         ui-sref="login"
@@ -17,8 +17,9 @@
         >Register</a
       >
     </div>
-    <div ng-show="$Ctrl.isLoggedIn">
-      <p>Satish</p>
+    <div ng-if="$Ctrl.isLoggedIn">
+      <p>{{$Ctrl.user.email}}</p>
+      <!-- <button class="btn btn-primary" ng-click="$Ctrl.logout()">Logout</button> -->
     </div>
   </div>
 </header>
