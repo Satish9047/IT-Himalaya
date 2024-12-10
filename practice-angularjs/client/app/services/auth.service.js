@@ -2,7 +2,9 @@ app.service("authService", [
   function () {
     this.user = [];
 
+    //Register User
     this.registerUser = (user) => {
+      //setup localforage instance
       const storeName = user.email.replace("@", "").replace(".", "");
       const storeInstance = localforage.createInstance({
         name: `Users`,
@@ -10,6 +12,7 @@ app.service("authService", [
         description: `Data for ${user.email}`,
       });
 
+      // Store user data in Users store
       return storeInstance
         .setItem("userDetails", user)
         .then(() => {
@@ -22,7 +25,9 @@ app.service("authService", [
         });
     };
 
+    //Login User
     this.loginUser = (user) => {
+      //setup localforage instance
       const storeName = user.email.replace("@", "").replace(".", "");
       const storeInstance = localforage.createInstance({
         name: `Users`,
@@ -30,15 +35,17 @@ app.service("authService", [
         description: `Data for ${user.email}`,
       });
 
+      // Retrieve user data from Users store
       return storeInstance.getItem("userDetails").then((storedUserData) => {
         if (storedUserData && storedUserData.password === user.password) {
-          // console.log("log success");
+          //Setting the user into the loggedUser store if the user in valid
           const storeInstance = localforage.createInstance({
             name: "loggedUser",
             storeName: "user",
             description: `Data for ${user.email}`,
           });
 
+          //Setting the  user in loggedUser store
           storeInstance
             .setItem("loggedUser", storedUserData)
             .then(() => {

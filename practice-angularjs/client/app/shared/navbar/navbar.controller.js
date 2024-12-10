@@ -24,6 +24,7 @@ app.component("appNavbar", {
         initializeData(user);
       });
 
+      //Listen to user updated event
       $scope.$on("user:updated", (event, user) => {
         initializeData(user);
         $scope.$apply();
