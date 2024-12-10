@@ -26,6 +26,12 @@ app.service("userService", [
       }
     };
 
+    this.logout = () => {
+      this.user = {};
+      localforage.removeItem("loggedUser");
+      $rootScope.$broadcast("user:updated", this.user);
+    };
+
     this.setUser = (user) => {
       this.user = user;
       $rootScope.$broadcast("user:updated", this.user); // broadcast the user data so that the component can rerender itself
