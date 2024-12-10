@@ -5,17 +5,21 @@ app.component("appLogin", {
   controller: [
     "$state",
     "authService",
-    function ($state, authService) {
+    "userService",
+    function ($state, authService, userService) {
       this.user = {};
 
-      this.onLogin = (event) => {
+      this.onLogin = async (event) => {
         event.preventDefault();
-        const res = authService.loginUser(this.user);
-        if (res) {
-          $state.go("dashboard");
-        } else {
-          alert("Invalid credentials");
-        }
+
+        authService.loginUser(this.user).then((res) => {
+          if (res) {
+            userService.setUser(res.user);
+            $state.go("dashboard");
+          } else {
+            alert("Invalid credentials");
+          }
+        });
       };
     },
   ],
