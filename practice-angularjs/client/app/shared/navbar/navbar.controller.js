@@ -26,9 +26,18 @@ app.component("appNavbar", {
 
       //Listen to user updated event
       $scope.$on("user:updated", (event, user) => {
-        initializeData(user);
-        $scope.$apply();
+        if (user.email) {
+          initializeData(user);
+          $scope.$apply();
+        } else {
+          initializeData(null);
+        }
       });
+
+      this.logout = () => {
+        userService.logout();
+        initializeData(null);
+      };
     },
   ],
 });
