@@ -13,6 +13,7 @@ angular.module("dashboardModule", []).component("appDashboard", {
         if (user) {
           this.user = user;
           this.isLoggedIn = true;
+          $scope.$apply();
         } else {
           this.isLoggedIn = false;
           this.user = {};
@@ -22,6 +23,7 @@ angular.module("dashboardModule", []).component("appDashboard", {
 
       userService.getUser().then((user) => {
         if (user) {
+          console.log(user);
           initializeData(user);
         } else {
           initializeData(null);
