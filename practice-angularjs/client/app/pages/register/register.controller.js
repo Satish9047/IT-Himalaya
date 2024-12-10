@@ -1,6 +1,4 @@
-angular.module("registerModule", []);
-
-app.component("appRegister", {
+angular.module("registerModule", []).component("appRegister", {
   templateUrl: "./app/pages/register/register.template.html",
   controllerAs: "$RegisterCtrl",
   controller: [

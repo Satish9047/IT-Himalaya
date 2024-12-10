@@ -1,5 +1,4 @@
-angular.module("loginModule", []);
-app.component("appLogin", {
+angular.module("loginModule", []).component("appLogin", {
   templateUrl: "./app/pages/login/login.template.html",
   controllerAs: "$LoginCtrl",
   controller: [

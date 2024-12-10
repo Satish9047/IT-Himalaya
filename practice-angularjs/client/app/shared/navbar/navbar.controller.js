@@ -21,7 +21,11 @@ app.component("appNavbar", {
       };
 
       userService.getUser().then((user) => {
-        initializeData(user);
+        if (user) {
+          initializeData(user);
+        } else {
+          initializeData(null);
+        }
       });
 
       //Listen to user updated event
