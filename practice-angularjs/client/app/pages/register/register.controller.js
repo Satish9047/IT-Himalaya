@@ -11,14 +11,16 @@ app.component("appRegister", {
 
       this.onRegister = (event) => {
         event.preventDefault();
-        // debugger;
-        console.log(this.user);
-        const res = authService.registerUser(this.user);
-        if (res) {
-          $state.go("login");
-        } else {
-          console.log("error");
-        }
+        // console.log(this.user);
+        authService
+          .registerUser(this.user)
+          .then((res) => {
+            console.log(res);
+            $state.go("login");
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       };
     },
   ],
