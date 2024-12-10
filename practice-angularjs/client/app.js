@@ -29,9 +29,10 @@ app.config([
         loadDashboardModule: [
           "$ocLazyLoad",
           function ($ocLazyLoad) {
-            return $ocLazyLoad.load(
-              "./app/pages/dashboard/dashboard.controller.js"
-            );
+            return $ocLazyLoad.load([
+              "./app/pages/dashboard/dashboard.controller.js",
+              "./app/services/user.service.js",
+            ]);
           },
         ],
       },
@@ -41,12 +42,13 @@ app.config([
       url: "/register",
       template: "<app-register></app-register>",
       resolve: {
-        loadDashboardModule: [
+        loadRegisterModule: [
           "$ocLazyLoad",
           function ($ocLazyLoad) {
-            return $ocLazyLoad.load(
-              "./app/pages/register/register.controller.js"
-            );
+            return $ocLazyLoad.load([
+              "./app/pages/register/register.controller.js",
+              "./app/services/auth.service.js",
+            ]);
           },
         ],
       },
@@ -56,10 +58,14 @@ app.config([
       url: "/login",
       template: "<app-login></app-login>",
       resolve: {
-        loadDashboardModule: [
+        loadLoginModule: [
           "$ocLazyLoad",
           function ($ocLazyLoad) {
-            return $ocLazyLoad.load("./app/pages/login/login.controller.js");
+            return $ocLazyLoad.load([
+              "./app/pages/login/login.controller.js",
+              "./app/services/auth.service.js",
+              "./app/services/user.service.js",
+            ]);
           },
         ],
       },
