@@ -28,7 +28,13 @@ app.service("userService", [
 
     this.logout = () => {
       this.user = {};
-      localforage.removeItem("loggedUser");
+      const storeInstance = localforage.createInstance({
+        name: `loggedUser`,
+        storeName: "user",
+        description: `Data for logged user`,
+      });
+
+      storeInstance.removeItem("loggedUser");
       $rootScope.$broadcast("user:updated", this.user);
     };
 
