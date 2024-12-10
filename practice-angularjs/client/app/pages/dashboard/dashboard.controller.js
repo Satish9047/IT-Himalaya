@@ -3,12 +3,19 @@ app.component("appDashboard", {
   templateUrl: "./app/pages/dashboard/dashboard.template.html",
   controllerAs: "$DashboardCtrl",
   controller: [
+    "$scope",
     "userService",
-    function (userService) {
+    function ($scope, userService) {
       this.isLoggedIn = false;
       this.user = {};
 
-      this.user = userService.getUser();
+      userService.getUser().then((user) => {
+        if (user) {
+          this.user = user;
+          this.isLoggedIn = true;
+        }
+        $scope.$apply();
+      });
     },
   ],
 });
