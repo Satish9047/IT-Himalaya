@@ -12,7 +12,6 @@ angular.module("registerModule", []).component("appRegister", {
         authService
           .registerUser(this.user)
           .then((res) => {
-            console.log(res);
             $state.go("login");
           })
           .catch((err) => {

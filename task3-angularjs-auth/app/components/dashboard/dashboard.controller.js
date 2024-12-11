@@ -23,7 +23,6 @@ angular.module("dashboardModule", ["addTaskModule"]).component("appDashboard", {
 
       userService.getUser().then((user) => {
         if (user) {
-          console.log(user);
           initializeData(user);
         } else {
           initializeData(null);

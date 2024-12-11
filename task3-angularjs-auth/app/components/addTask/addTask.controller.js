@@ -8,7 +8,6 @@ angular.module("addTaskModule", ["app"]).component("addTask", {
       this.taskDescription = "";
 
       this.addTask = () => {
-        console.log(this.taskDescription);
         if (this.taskDescription.trim() !== "") {
           const id = Date.now().toString();
           const description = this.taskDescription;
@@ -18,7 +17,6 @@ angular.module("addTaskModule", ["app"]).component("addTask", {
           const newTask = new Task(id, description, createdAt, dueDate);
 
           taskService.addTask(newTask);
-          console.log("added");
           this.taskDescription = "";
         }
       };

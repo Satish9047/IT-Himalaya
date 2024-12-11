@@ -8,7 +8,6 @@ app.service("authService", [
       return storeInstance
         .setItem("userDetails", user)
         .then((resData) => {
-          console.log(resData);
           console.log(`User ${user.email} data stored successfully.`);
           return true;
         })

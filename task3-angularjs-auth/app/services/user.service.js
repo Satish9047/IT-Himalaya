@@ -3,6 +3,7 @@ app.service("userService", [
   function ($rootScope) {
     this.user = null;
 
+    // Get User
     this.getUser = () => {
       if (this.user && this.user.email) {
         return Promise.resolve(this.user);
@@ -18,6 +19,7 @@ app.service("userService", [
       }
     };
 
+    // Logout User
     this.logout = () => {
       this.user = null;
       const storeInstance = getLoggedUserStoreInstance();
@@ -26,6 +28,7 @@ app.service("userService", [
       $rootScope.$broadcast("user:updated", this.user);
     };
 
+    //Set User
     this.setUser = (user) => {
       this.user = user;
       $rootScope.$broadcast("user:updated", this.user); // broadcast the user data so that the component can rerender itself

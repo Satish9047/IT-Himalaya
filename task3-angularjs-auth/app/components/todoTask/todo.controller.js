@@ -9,14 +9,11 @@ angular.module("todoTaskModule", ["app"]).component("todoTask", {
 
       taskService.loadTask().then((tasks) => {
         this.taskList = tasks;
-        // console.log("todo", $TodoCtrl.taskList);
         $scope.$apply();
       });
 
       // Get tasks from the service
       this.taskList = taskService.getTasks();
-      console.log("todo--", this.taskList);
-      //   console.log("todo", $TodoCtrl.taskList);
 
       this.deleteTask = (taskId) => {
         taskService.deleteTask(taskId);

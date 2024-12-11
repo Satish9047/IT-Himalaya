@@ -11,7 +11,6 @@ app.service("taskService", [
           try {
             const userData = await userService.getUser();
             if (userData && userData.email) {
-              console.log("User data:", userData);
               this.user = userData;
             } else {
               console.warn("No user data found.");
@@ -39,7 +38,6 @@ app.service("taskService", [
         const taskData = await storeInstance.getItem("userTasks");
 
         if (taskData) {
-          console.log("Loaded tasks:", taskData);
           this.tasks = taskData;
         } else {
           console.log("No tasks found.");
@@ -61,8 +59,6 @@ app.service("taskService", [
     // Add a new task
     this.addTask = async (newTask) => {
       try {
-        console.log("Adding new task:", newTask);
-
         if (!this.user || !this.user.email) {
           console.error("User not initialized. Cannot add task.");
           return;
@@ -71,9 +67,14 @@ app.service("taskService", [
         this.tasks.push(newTask);
 
         const storeInstance = getStoreInstance(this.user);
-        await storeInstance.setItem("userTasks", this.tasks);
-
-        console.log("Task added successfully.");
+        await storeInstance
+          .setItem("userTasks", this.tasks)
+          .then(() => {
+            console.log("Task added successfully.");
+          })
+          .catch((err) => {
+            console.error("Error storing tasks:", err);
+          });
       } catch (error) {
         console.error("Error adding task:", error);
       }
@@ -92,9 +93,14 @@ app.service("taskService", [
           this.tasks.splice(taskIndex, 1);
 
           const storeInstance = getStoreInstance(this.user);
-          await storeInstance.setItem("userTasks", this.tasks);
-
-          console.log("Task deleted successfully.");
+          await storeInstance
+            .setItem("userTasks", this.tasks)
+            .then(() => {
+              console.log("Task deleted successfully.");
+            })
+            .catch((error) => {
+              console.error("Error storing tasks:", error);
+            });
         } else {
           console.warn("Task not found:", taskId);
         }
@@ -117,9 +123,14 @@ app.service("taskService", [
           task.completedAt = new Date().toISOString();
 
           const storeInstance = getStoreInstance(this.user);
-          await storeInstance.setItem("userTasks", this.tasks);
-
-          console.log("Task marked as completed:", taskId);
+          await storeInstance
+            .setItem("userTasks", this.tasks)
+            .then(() => {
+              console.log("Task marked as completed successfully.");
+            })
+            .catch((error) => {
+              console.error("Error storing tasks:", error);
+            });
         } else {
           console.warn("Task not found:", taskId);
         }

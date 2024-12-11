@@ -8,7 +8,6 @@ angular.module("completedTaskModule", ["app"]).component("completedTask", {
 
       taskService.loadTask().then((tasks) => {
         this.completedTaskList = tasks;
-        console.log("completed", this.completedTaskList);
       });
 
       this.deleteTask = function (taskId) {

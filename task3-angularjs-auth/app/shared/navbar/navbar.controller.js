@@ -38,6 +38,7 @@ app.component("appNavbar", {
         }
       });
 
+      //Logout User
       this.logout = () => {
         userService.logout();
         initializeData(null);
