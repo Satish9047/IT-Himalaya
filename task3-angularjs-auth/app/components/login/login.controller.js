@@ -1,5 +1,5 @@
 angular.module("loginModule", []).component("appLogin", {
-  templateUrl: "./app/pages/login/login.template.html",
+  templateUrl: "./app/components/login/login.template.html",
   controllerAs: "$LoginCtrl",
   controller: [
     "$state",

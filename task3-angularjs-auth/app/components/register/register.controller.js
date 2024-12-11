@@ -1,5 +1,5 @@
 angular.module("registerModule", []).component("appRegister", {
-  templateUrl: "./app/pages/register/register.template.html",
+  templateUrl: "./app/components/register/register.template.html",
   controllerAs: "$RegisterCtrl",
   controller: [
     "$state",
