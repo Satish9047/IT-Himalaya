@@ -1,4 +1,4 @@
-angular.module("addTaskModule", []).component("addTask", {
+angular.module("addTaskModule", ["app"]).component("addTask", {
   templateUrl: "./app/components/addTask/addTask.template.html",
   controllerAs: "$AddCtrl",
   controller: [

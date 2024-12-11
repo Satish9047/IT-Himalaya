@@ -1,4 +1,4 @@
-app.component("completedTask", {
+angular.module("completedTaskModule", ["app"]).component("completedTask", {
   templateUrl: "./app/components/completedTask/completed.template.html",
   controllerAs: "$CompletedCtrl",
   controller: [

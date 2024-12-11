@@ -1,4 +1,4 @@
-app.component("todoTask", {
+angular.module("todoTaskModule", ["app"]).component("todoTask", {
   templateUrl: "./app/components/todoTask/todo.template.html",
   controllerAs: "$TodoCtrl",
   controller: [
