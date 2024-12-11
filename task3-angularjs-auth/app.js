@@ -33,8 +33,13 @@ app.config([
               name: "dashboardModule",
               files: [
                 "./app/components/dashboard/dashboard.controller.js",
+                "./app/components/addTask/addTask.controller.js",
+                "./app/components/completedTask/completed.controller.js",
+                "./app/components/todoTask/todo.controller.js",
                 "./app/services/user.service.js",
-                "./app/utils/helper.js",
+                "./app/services/tasks.service.js",
+                "./app/utils/date.utils.js",
+                "./app/core/task.js",
               ],
             });
           },
@@ -54,7 +59,7 @@ app.config([
               files: [
                 "./app/components/register/register.controller.js",
                 "./app/services/auth.service.js",
-                "./app/utils/helper.js",
+                "./app/utils/date.utils.js",
               ],
             });
           },
