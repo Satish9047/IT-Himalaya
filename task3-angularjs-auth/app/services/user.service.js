@@ -1,7 +1,8 @@
 app.service("userService", [
   "$rootScope",
-  function ($rootScope) {
-    this.user = null;
+  "$injector",
+  function ($rootScope, $injector) {
+    this.user = {};
 
     // Get User
     this.getUser = () => {
@@ -21,9 +22,10 @@ app.service("userService", [
 
     // Logout User
     this.logout = () => {
-      this.user = null;
+      this.user = {};
+      const taskService = $injector.get("taskService");
+      taskService.clearTasks();
       const storeInstance = getLoggedUserStoreInstance();
-
       storeInstance.removeItem("loggedUser");
       $rootScope.$broadcast("user:updated", this.user);
     };
