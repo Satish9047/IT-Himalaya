@@ -1,5 +1,5 @@
-angular.module("dashboardModule", []).component("appDashboard", {
-  templateUrl: "./app/pages/dashboard/dashboard.template.html",
+angular.module("dashboardModule", ["addTaskModule"]).component("appDashboard", {
+  templateUrl: "./app/components/dashboard/dashboard.template.html",
   controllerAs: "$DashboardCtrl",
   controller: [
     "$scope",
