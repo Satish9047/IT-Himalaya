@@ -32,7 +32,7 @@ app.config([
             return $ocLazyLoad.load({
               name: "dashboardModule",
               files: [
-                "./app/pages/dashboard/dashboard.controller.js",
+                "./app/components/dashboard/dashboard.controller.js",
                 "./app/services/user.service.js",
                 "./app/utils/helper.js",
               ],
@@ -52,7 +52,7 @@ app.config([
             return $ocLazyLoad.load({
               name: "registerModule",
               files: [
-                "./app/pages/register/register.controller.js",
+                "./app/components/register/register.controller.js",
                 "./app/services/auth.service.js",
                 "./app/utils/helper.js",
               ],
@@ -72,7 +72,7 @@ app.config([
             return $ocLazyLoad.load({
               name: "loginModule",
               files: [
-                "./app/pages/login/login.controller.js",
+                "./app/components/login/login.controller.js",
                 "./app/services/auth.service.js",
                 "./app/services/user.service.js",
               ],
