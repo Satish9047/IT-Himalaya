@@ -1,17 +1,17 @@
 app.service("userService", [
-  "localforage",
   "$rootScope",
-  function (localforage, $rootScope) {
-    this.user = {};
+  function ($rootScope) {
+    this.user = null;
 
     this.getUser = () => {
-      if (this.user.email) {
+      if (this.user && this.user.email) {
         return Promise.resolve(this.user);
       } else {
         const storeInstance = getLoggedUserStoreInstance();
         return storeInstance.getItem("loggedUser").then((storedUserData) => {
           if (storedUserData) {
-            return { ...storedUserData, password: undefined };
+            this.user = { ...storedUserData, password: undefined };
+            return this.user;
           }
           return null;
         });
@@ -19,7 +19,7 @@ app.service("userService", [
     };
 
     this.logout = () => {
-      this.user = {};
+      this.user = null;
       const storeInstance = getLoggedUserStoreInstance();
 
       storeInstance.removeItem("loggedUser");
