@@ -9,7 +9,6 @@ angular.module("registerModule", []).component("appRegister", {
 
       this.onRegister = (event) => {
         event.preventDefault();
-        // console.log(this.user);
         authService
           .registerUser(this.user)
           .then((res) => {

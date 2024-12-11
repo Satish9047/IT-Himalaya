@@ -5,14 +5,10 @@ app.service("userService", [
     this.user = {};
 
     this.getUser = () => {
-      // return this.user
       if (this.user.email) {
         return Promise.resolve(this.user);
       } else {
-        // run when app is refreshed / for data persistence
         const storeInstance = getLoggedUserStoreInstance();
-
-        //return the data from loggedUser store
         return storeInstance.getItem("loggedUser").then((storedUserData) => {
           if (storedUserData) {
             return { ...storedUserData, password: undefined };
