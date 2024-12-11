@@ -10,11 +10,7 @@ app.service("userService", [
         return Promise.resolve(this.user);
       } else {
         // run when app is refreshed / for data persistence
-        const storeInstance = localforage.createInstance({
-          name: `loggedUser`,
-          storeName: "user",
-          description: `Data for logged user`,
-        });
+        const storeInstance = getLoggedUserStoreInstance();
 
         //return the data from loggedUser store
         return storeInstance.getItem("loggedUser").then((storedUserData) => {
@@ -28,11 +24,7 @@ app.service("userService", [
 
     this.logout = () => {
       this.user = {};
-      const storeInstance = localforage.createInstance({
-        name: `loggedUser`,
-        storeName: "user",
-        description: `Data for logged user`,
-      });
+      const storeInstance = getLoggedUserStoreInstance();
 
       storeInstance.removeItem("loggedUser");
       $rootScope.$broadcast("user:updated", this.user);

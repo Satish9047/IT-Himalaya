@@ -28,11 +28,7 @@ app.service("authService", [
       return storeInstance.getItem("userDetails").then((storedUserData) => {
         if (storedUserData && storedUserData.password === user.password) {
           //Setting the user into the loggedUser store if the user in valid
-          const storeInstance = localforage.createInstance({
-            name: "loggedUser",
-            storeName: "user",
-            description: `Data for ${user.email}`,
-          });
+          const storeInstance = getLoggedUserStoreInstance();
 
           //Setting the  user in loggedUser store
           storeInstance

@@ -7,3 +7,12 @@ function getStoreInstance(user) {
   });
   return storeInstance;
 }
+
+function getLoggedUserStoreInstance() {
+  const storeInstance = localforage.createInstance({
+    name: `loggedUser`,
+    storeName: "user",
+    description: `Data for logged user`,
+  });
+  return storeInstance;
+}
