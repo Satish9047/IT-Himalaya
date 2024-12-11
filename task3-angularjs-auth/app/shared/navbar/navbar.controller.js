@@ -7,7 +7,7 @@ app.component("appNavbar", {
     "userService",
     function ($scope, $state, userService) {
       this.isLoggedIn = false;
-      this.user = {};
+      this.user = null;
 
       const initializeData = (user) => {
         if (user) {
@@ -15,7 +15,7 @@ app.component("appNavbar", {
           this.isLoggedIn = true;
         } else {
           this.isLoggedIn = false;
-          this.user = {};
+          this.user = null;
           $state.go("login");
         }
       };
@@ -40,6 +40,7 @@ app.component("appNavbar", {
 
       //Logout User
       this.logout = () => {
+        console.log("logout 1");
         userService.logout();
         initializeData(null);
       };
