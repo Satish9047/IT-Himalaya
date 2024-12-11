@@ -51,6 +51,13 @@ app.service("taskService", [
       }
     };
 
+    //clear tasks
+    this.clearTasks = () => {
+      this.tasks = [];
+      this.user = null;
+      console.log("Tasks cleared successfully.");
+    };
+
     // Get task
     this.getTasks = () => {
       return this.tasks;
