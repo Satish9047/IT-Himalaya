@@ -10,6 +10,21 @@ app.config([
   },
 ]);
 
+app.run([
+  "$state",
+  "userService",
+  function run($state, userService) {
+    // Check if user is logged in
+    userService.getUser().then((user) => {
+      if (user) {
+        $state.go("dashboard");
+      } else {
+        $state.go("login");
+      }
+    });
+  },
+]);
+
 //Router Configuration
 app.config([
   "$stateProvider",
@@ -17,13 +32,8 @@ app.config([
   function config($stateProvider, $urlRouterProvider) {
     $urlRouterProvider.otherwise("/");
 
-    $stateProvider.state("layout", {
-      abstract: true,
-      template: "<app-navbar></app-navbar>",
-    });
     $stateProvider.state("dashboard", {
-      parent: "layout",
-      url: "/",
+      url: "/dashboard",
       template: "<app-dashboard></app-dashboard>",
       resolve: {
         loadDashboardModule: [
@@ -46,8 +56,8 @@ app.config([
         ],
       },
     });
+
     $stateProvider.state("register", {
-      parent: "layout",
       url: "/register",
       template: "<app-register></app-register>",
       resolve: {
@@ -66,8 +76,8 @@ app.config([
         ],
       },
     });
+
     $stateProvider.state("login", {
-      parent: "layout",
       url: "/login",
       template: "<app-login></app-login>",
       resolve: {
