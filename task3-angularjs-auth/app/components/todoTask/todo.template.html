@@ -1,5 +1,4 @@
 <!-- Todo Task -->
-
 <div>
   <h3 class="fs-4">ToDo Task</h3>
   <ol class="list-group" style="min-height: 200px">
@@ -9,6 +8,7 @@
     >
       <p>empty task</p>
     </div>
+    <!-- list of todo task -->
     <li
       ng-repeat="task in $TodoCtrl.taskList | filter: { completed: false }"
       class="list-group-item bg-warning-subtle shadow mb-3 rounded"
@@ -26,12 +26,15 @@
           </div>
         </div>
         <div>
+          <!-- submit button -->
           <button
             class="btn btn-warning shadow"
             ng-click="$TodoCtrl.deleteTask(task.id)"
           >
             Delete
           </button>
+
+          <!-- completed button -->
           <button
             class="btn btn-primary shadow"
             ng-click="$TodoCtrl.sendTaskToCompleted(task.id)"
