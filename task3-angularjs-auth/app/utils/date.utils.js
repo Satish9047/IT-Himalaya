@@ -24,7 +24,7 @@ function getDueDate() {
  */
 function formatDate(date) {
   const year = date.getFullYear();
-  const month = String(date.getMonth() + 1);
+  const month = String(date.getMonth());
   const day = String(date.getDate());
   const hours = String(date.getHours());
   const minutes = String(date.getMinutes());
