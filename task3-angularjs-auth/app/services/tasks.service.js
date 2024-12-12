@@ -122,7 +122,7 @@ app.service("taskService", [
         const task = this.tasks.find((task) => task.id === taskId);
         if (task) {
           task.completed = true;
-          task.completedAt = new Date().toISOString();
+          task.completedAt = getFormattedDate();
 
           const storeInstance = getStoreInstance(this.user);
           await storeInstance
