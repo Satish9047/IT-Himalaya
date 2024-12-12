@@ -12,6 +12,11 @@ angular.module("todoTaskModule", ["app"]).component("todoTask", {
         $scope.$apply();
       });
 
+      $scope.$on("task:updated", (event, tasks) => {
+        this.taskList = tasks;
+        // $scope.$apply();
+      });
+
       // Get tasks from the service
       this.taskList = taskService.getTasks();
 

@@ -10,7 +10,7 @@
     </div>
     <!-- list of todo task -->
     <li
-      ng-repeat="task in $TodoCtrl.taskList | filter: { completed: false }"
+      ng-repeat="task in $TodoCtrl.taskList | filter: { completed: false } track by task.id"
       class="list-group-item bg-warning-subtle shadow mb-3 rounded"
     >
       <p class="fs-5">{{ task.description }}</p>

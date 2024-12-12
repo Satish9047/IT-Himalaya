@@ -1,6 +1,7 @@
 app.service("taskService", [
+  "$rootScope",
   "userService",
-  function (userService) {
+  function ($rootScope, userService) {
     this.tasks = [];
     this.user = null;
 
@@ -50,6 +51,7 @@ app.service("taskService", [
     this.clearTasks = () => {
       this.tasks = [];
       this.user = null;
+      $rootScope.$broadcast("task:updated", this.tasks);
       console.log("Tasks cleared successfully.");
     };
 
@@ -67,6 +69,7 @@ app.service("taskService", [
         }
 
         this.tasks.push(newTask);
+        $rootScope.$broadcast("task:updated", this.tasks);
 
         const storeInstance = getStoreInstance(this.user);
         await storeInstance
@@ -93,6 +96,8 @@ app.service("taskService", [
         const taskIndex = this.tasks.findIndex((task) => task.id === taskId);
         if (taskIndex !== -1) {
           this.tasks.splice(taskIndex, 1);
+
+          $rootScope.$broadcast("tasks:updated", this.tasks);
 
           const storeInstance = getStoreInstance(this.user);
           await storeInstance
@@ -123,6 +128,8 @@ app.service("taskService", [
         if (task) {
           task.completed = true;
           task.completedAt = getFormattedDate();
+
+          $rootScope.$broadcast("task:updated", this.tasks);
 
           const storeInstance = getStoreInstance(this.user);
           await storeInstance
