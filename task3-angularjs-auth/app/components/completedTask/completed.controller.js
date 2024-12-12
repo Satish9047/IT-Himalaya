@@ -9,6 +9,7 @@ angular.module("completedTaskModule", ["app"]).component("completedTask", {
 
       taskService.loadTask().then((tasks) => {
         this.completedTaskList = tasks;
+        $scope.$apply();
       });
 
       $scope.$on("task:updated", (event, tasks) => {
