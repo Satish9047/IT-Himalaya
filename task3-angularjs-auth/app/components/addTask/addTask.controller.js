@@ -2,9 +2,9 @@ angular.module("addTaskModule", ["app"]).component("addTask", {
   templateUrl: "./app/components/addTask/addTask.template.html",
   controllerAs: "$AddCtrl",
   controller: [
+    "$scope",
     "taskService",
-    "localforage",
-    function (taskService) {
+    function ($scope, taskService) {
       this.taskDescription = "";
 
       this.addTask = () => {
@@ -18,6 +18,8 @@ angular.module("addTaskModule", ["app"]).component("addTask", {
 
           taskService.addTask(newTask);
           this.taskDescription = "";
+          $scope.addTaskForm.$setPristine();
+          $scope.addTaskForm.$setUntouched();
         }
       };
     },
