@@ -7,21 +7,16 @@ app.service("taskService", [
     // load user
     this.loadUser = async () => {
       if (!this.user) {
-        if (!this.user) {
-          try {
-            const userData = await userService.getUser();
-            if (userData && userData.email) {
-              this.user = userData;
-            } else {
-              console.warn("No user data found.");
-            }
-          } catch (error) {
-            console.error("Error fetching user data:", error);
+        try {
+          const userData = await userService.getUser();
+          if (userData && userData.email) {
+            this.user = userData;
+          } else {
+            console.warn("No user data found.");
           }
+        } catch (error) {
+          console.error("Error fetching user data:", error);
         }
-      }
-      if (!this.user || !this.user.email) {
-        throw new Error("User not initialized. Cannot perform the operation.");
       }
     };
 
