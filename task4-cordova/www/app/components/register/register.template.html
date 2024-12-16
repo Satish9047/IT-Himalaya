@@ -1,0 +1,105 @@
+<div class="container d-flex justify-content-center align-items-center vh-100">
+  <div class="card shadow-lg p-4" style="width: 100%; max-width: 500px">
+    <h2 class="text-center mb-2">Register</h2>
+    <form
+      ng-submit="$RegisterCtrl.onRegister($event)"
+      class="row g-3 needs-validation"
+      name="form"
+      novalidate
+    >
+      <!-- First Name -->
+      <div class="">
+        <label for="fname" class="form-label">First Name</label>
+        <input
+          type="text"
+          id="fname"
+          name="fname"
+          ng-required="true"
+          class="form-control"
+          ng-model="$RegisterCtrl.user.firstName"
+          placeholder="first name"
+        />
+        <div ng-show="form.$submitted || form.fname.$touched">
+          <span ng-show="form.fname.$error.required" class="text-danger"
+            >Email is Mandatory</span
+          >
+        </div>
+      </div>
+
+      <!-- Last Name -->
+      <div class="">
+        <label for="lname" class="form-label">Last Name</label>
+        <input
+          type="text"
+          id="lname"
+          name="lname"
+          ng-required="true"
+          class="form-control"
+          ng-model="$RegisterCtrl.user.lastName"
+          placeholder="last name"
+        />
+        <div ng-show="form.$submitted || form.lname.$touched">
+          <span ng-show="form.lname.$error.required" class="text-danger"
+            >Email is Mandatory</span
+          >
+        </div>
+      </div>
+
+      <!-- Email -->
+      <div class="">
+        <label for="email" class="form-label">Email</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          ng-required="true"
+          class="form-control"
+          ng-model="$RegisterCtrl.user.email"
+          placeholder="email"
+        />
+        <div ng-show="form.$submitted || form.email.$touched">
+          <span ng-show="form.email.$error.required" class="text-danger"
+            >Email is Mandatory</span
+          >
+          <span ng-show="form.email.$error.email" class="text-danger"
+            >Invalid Email</span
+          >
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div class="">
+        <label for="password" class="form-label">Password</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          ng-required="true"
+          class="form-control"
+          ng-model="$RegisterCtrl.user.password"
+          placeholder="Enter password"
+          ng-minlength="8"
+        />
+        <div ng-show="form.$submitted || form.password.$touched">
+          <span ng-show="form.password.$error.required" class="text-danger"
+            >Email is Mandatory</span
+          >
+          <span ng-show="form.password.$error.minlength" class="text-danger"
+            >Password must be at least 8 characters</span
+          >
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="d-flex justify-content-end">
+        <button
+          type="submit"
+          class="btn btn-primary"
+          ng-disabled="form.$invalid"
+        >
+          Register
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
