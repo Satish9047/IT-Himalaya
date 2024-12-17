@@ -7,16 +7,14 @@ angular.module("registerModule", []).component("appRegister", {
     function ($state, authService) {
       this.user = {};
 
-      this.onRegister = (event) => {
+      this.onRegister = async (event) => {
         event.preventDefault();
-        authService
-          .registerUser(this.user)
-          .then((res) => {
-            $state.go("login");
-          })
-          .catch((err) => {
-            console.log(err);
-          });
+        const res = await authService.registerUser(this.user);
+        if (res) {
+          $state.go("login");
+        } else {
+          console.log("something went wrong");
+        }
       };
     },
   ],
