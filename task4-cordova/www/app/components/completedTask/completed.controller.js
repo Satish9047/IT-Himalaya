@@ -13,7 +13,6 @@ angular.module("completedTaskModule", ["app"]).component("completedTask", {
       });
 
       this.completedTaskList = taskService.getTasks();
-      console.log("update 1");
 
       $scope.$on("task:updated", (event, tasks) => {
         console.log("updated");

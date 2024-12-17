@@ -36,6 +36,7 @@ app.service("userService", [
     //Set User
     this.setUser = (user) => {
       this.user = user;
+      console.log("set User ", user);
       $rootScope.$broadcast("user:updated", this.user); // broadcast the user data so that the component can rerender itself
     };
   },
