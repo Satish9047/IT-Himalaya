@@ -21,7 +21,7 @@ app.service("authService", [
         .loginUser(user)
         .then((resData) => {
           console.log("User logged in successfully:", resData);
-          return true;
+          return resData;
         })
         .catch((error) => {
           console.error("Error logging in user:", error);

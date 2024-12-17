@@ -13,7 +13,7 @@ angular.module("loginModule", []).component("appLogin", {
 
         authService.loginUser(this.user).then((res) => {
           if (res) {
-            userService.setUser(res.user);
+            userService.setUser(res);
             $state.go("dashboard");
           } else {
             alert("Invalid credentials");
