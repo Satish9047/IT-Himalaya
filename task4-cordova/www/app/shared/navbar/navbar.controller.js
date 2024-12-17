@@ -33,9 +33,9 @@ app.component("appNavbar", {
 
       //Listen to user updated event
       $scope.$on("user:updated", (event, user) => {
+        console.log("user updated in navbar", user);
         if (user.email) {
           initializeData(user);
-          $scope.$apply();
         } else {
           initializeData(null);
         }
