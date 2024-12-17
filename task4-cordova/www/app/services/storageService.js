@@ -214,90 +214,142 @@ app.service("storageService", [
 
       return deferred.promise;
     };
+
+    // Task methods
+    // Method to save a task
+    this.saveTask = function (user, newTask) {
+      var deferred = $q.defer();
+
+      if (isCordova) {
+        // SQLite logic for saving a task
+        db.transaction(function (tx) {
+          tx.executeSql(
+            "INSERT INTO tasks (id, description, completed, createdAt, dueDate, completedAt) VALUES (?, ?, ?, ?, ?, ?)",
+            [
+              newTask.id,
+              newTask.description,
+              newTask.completed,
+              newTask.createdAt,
+              newTask.dueDate,
+              newTask.completedAt,
+            ],
+            function (tx, result) {
+              deferred.resolve(result.insertId); // Return the inserted ID
+            },
+            function (tx, error) {
+              console.error("Error saving task to SQLite: " + error.message);
+              deferred.reject(error);
+            }
+          );
+        });
+      } else {
+        // localForage logic for saving a task in browser
+        const storeInstance = getStoreInstance(user);
+        storeInstance
+          .setItem("userTasks", newTask)
+          .then(function () {
+            console.log("Task saved to localForage.");
+          })
+          .catch((error) => {
+            console.log("Error saving task to localForage: " + error.message);
+          });
+      }
+
+      return deferred.promise;
+    };
+
+    // Method to get tasks for a specific user
+    this.getTasksByUser = function (user) {
+      var deferred = $q.defer();
+
+      if (isCordova) {
+        db.transaction(function (tx) {
+          tx.executeSql(
+            "SELECT * FROM tasks WHERE id IN (SELECT taskId FROM Users WHERE id = ?)",
+            [user.id],
+            function (tx, result) {
+              var tasks = [];
+              for (var i = 0; i < result.rows.length; i++) {
+                tasks.push(result.rows.item(i));
+              }
+              deferred.resolve(tasks);
+            },
+            function (tx, error) {
+              console.error("Error fetching tasks for user: " + error.message);
+              deferred.reject(error);
+            }
+          );
+        });
+      } else {
+        // Browser implementation
+        const storeInstance = getStoreInstance(user);
+        storeInstance
+          .getItem("userTasks")
+          .then((tasks) => {
+            deferred.resolve(tasks);
+          })
+          .catch((error) => {
+            console.error("Error fetching tasks for user: " + error.message);
+            deferred.reject(error);
+          });
+      }
+
+      return deferred.promise;
+    };
+
+    //deleteTask
+    this.deleteTaskById = function (taskId, user) {
+      var deferred = $q.defer();
+
+      if (isCordova) {
+        db.transaction(function (tx) {
+          tx.executeSql(
+            "DELETE FROM tasks WHERE id = ? AND id IN (SELECT taskId FROM Users WHERE id = ?)",
+            [taskId, user.id],
+            function (tx, result) {
+              if (result.rowsAffected > 0) {
+                console.log(`Task with ID ${taskId} deleted successfully.`);
+                deferred.resolve(true);
+              } else {
+                console.log(
+                  `No task found with ID ${taskId} for user ${user.id}.`
+                );
+                deferred.resolve(false);
+              }
+            },
+            function (tx, error) {
+              console.error("Error deleting task: " + error.message);
+              deferred.reject(error);
+            }
+          );
+        });
+      } else {
+        // Browser implementation using localForage
+        const storeInstance = getStoreInstance(user);
+
+        storeInstance
+          .getItem("userTasks")
+          .then((tasks) => {
+            if (tasks && tasks.length > 0) {
+              // Filter out the task with the given taskId
+              const updatedTasks = tasks.filter((task) => task.id !== taskId);
+
+              // Save the updated task list
+              return storeInstance.setItem("userTasks", updatedTasks);
+            } else {
+              console.log("No tasks found for user.");
+              return null;
+            }
+          })
+          .then(() => {
+            deferred.resolve(true);
+          })
+          .catch((error) => {
+            deferred.reject(error);
+          });
+      }
+
+      return deferred.promise;
+    };
   },
 ]);
-
-// Task methods
-// Method to save a task
-// this.saveTask = function (user, newTask) {
-//   var deferred = $q.defer();
-
-//   if (isCordova) {
-//     // SQLite logic for saving a task
-//     db.transaction(function (tx) {
-//       tx.executeSql(
-//         "INSERT INTO tasks (id, description, completed, createdAt, dueDate, completedAt) VALUES (?, ?, ?, ?, ?, ?)",
-//         [
-//           newTask.id,
-//           newTask.description,
-//           newTask.completed,
-//           newTask.createdAt,
-//           newTask.dueDate,
-//           newTask.completedAt,
-//         ],
-//         function (tx, result) {
-//           deferred.resolve(result.insertId); // Return the inserted ID
-//         },
-//         function (tx, error) {
-//           console.error("Error saving task to SQLite: " + error.message);
-//           deferred.reject(error);
-//         }
-//       );
-//     });
-//   } else {
-//     // localForage logic for saving a task in browser
-//     const storeInstance = getStoreInstance(user);
-//     storeInstance
-//       .setItem("userTasks", newTask)
-//       .then(function () {
-//         console.log("Task saved to localForage.");
-//       })
-//       .catch((error) => {
-//         console.log("Error saving task to localForage: " + error.message);
-//       });
-//   }
-
-//   return deferred.promise;
-// };
-
-// Method to get tasks for a specific user
-// this.getTasksByUser = function (user) {
-//   var deferred = $q.defer();
-
-//   if (isCordova) {
-//     db.transaction(function (tx) {
-//       tx.executeSql(
-//         "SELECT * FROM tasks WHERE id IN (SELECT taskId FROM Users WHERE id = ?)",
-//         [user.id],
-//         function (tx, result) {
-//           var tasks = [];
-//           for (var i = 0; i < result.rows.length; i++) {
-//             tasks.push(result.rows.item(i));
-//           }
-//           deferred.resolve(tasks);
-//         },
-//         function (tx, error) {
-//           console.error("Error fetching tasks for user: " + error.message);
-//           deferred.reject(error);
-//         }
-//       );
-//     });
-//   } else {
-//     // Browser implementation
-//     const storeInstance = getStoreInstance(user);
-//     storeInstance
-//       .getItem("userTasks")
-//       .then((tasks) => {
-//         console.log("Tasks fetched from localForage:");
-//         deferred.resolve(tasks);
-//       })
-//       .catch((error) => {
-//         console.error("Error fetching tasks for user: " + error.message);
-//         deferred.reject(error);
-//       });
-//   }
-
-//   return deferred.promise;
-// };
-//   },
-// ]);
