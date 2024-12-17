@@ -32,8 +32,6 @@ app.service("taskService", [
         }
 
         const taskData = await storageService.getTasksByUser(this.user);
-        // const storeInstance = getStoreInstance(this.user);
-        // const taskData = await storeInstance.getItem("userTasks");
 
         if (taskData) {
           this.tasks = taskData;
@@ -126,9 +124,8 @@ app.service("taskService", [
 
           $rootScope.$broadcast("task:updated", this.tasks);
 
-          const storeInstance = getStoreInstance(this.user);
-          await storeInstance
-            .setItem("userTasks", this.tasks)
+          storageService
+            .sendToCompleted(taskId, this.user)
             .then(() => {
               console.log("Task marked as completed successfully.");
             })
