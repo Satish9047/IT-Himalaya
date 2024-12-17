@@ -4,52 +4,45 @@ app.service("storageService", [
     var isCordova = false;
     var db = null;
 
-    // Method to initialize SQLite or localForage accordingly
     this.initialize = function () {
       var deferred = $q.defer();
+      console.log("Initializing database...");
 
-      // Check if running in Cordova (Android)
       if (window.cordova && window.sqlitePlugin) {
         isCordova = true;
 
-        // Initialize SQLite database
         db = window.sqlitePlugin.openDatabase(
-          { name: "tasks.db", location: "default" },
+          { name: "taskManager.db", location: "default" },
           function () {
             console.log("SQLite database initialized.");
-            // Create table for tasks if it doesn't exist
             db.transaction(function (tx) {
-              //tasks
+              tx.executeSql("PRAGMA foreign_keys = ON;", []);
+
+              // Users Table
               tx.executeSql(
-                "CREATE TABLE IF NOT EXISTS tasks (id INTEGER PRIMARY KEY,  description TEXT, completed BOOLEAN, createdAt DATETIME, dueDate DATETIME, completedAt DATETIME)",
+                "CREATE TABLE IF NOT EXISTS Users (id INTEGER PRIMARY KEY, firstName TEXT, lastName TEXT, email TEXT, password TEXT)",
                 [],
                 function () {
-                  console.log("SQLite tasks table created.");
-                  deferred.resolve();
+                  console.log("Users table created.");
                 },
-                function (error) {
-                  console.error(
-                    "Error creating SQLite tasks table: " + error.message
-                  );
-                  deferred.reject(error);
+                function (tx, error) {
+                  console.error("Error creating Users table: " + error.message);
                 }
               );
 
-              //users
+              // Tasks Table
               tx.executeSql(
-                "CREATE TABLE IF NOT EXISTS Users (id INTEGER PRIMARY KEY, firstName TEXT, lastName TEXT, email TEXT, password TEXT, taskId INTEGER, FOREIGN KEY (taskId) REFERENCES tasks(id))",
+                "CREATE TABLE IF NOT EXISTS Tasks (id INTEGER PRIMARY KEY, description TEXT, completed BOOLEAN, createdAt DATETIME, dueDate DATETIME, completedAt DATETIME, userId INTEGER, FOREIGN KEY (userId) REFERENCES Users(id))",
                 [],
                 function () {
-                  console.log("SQLite tasks table created.");
-                  deferred.resolve();
+                  console.log("Tasks table created.");
                 },
-                function (error) {
-                  console.error(
-                    "Error creating SQLite tasks table: " + error.message
-                  );
-                  deferred.reject(error);
+                function (tx, error) {
+                  console.error("Error creating Tasks table: " + error.message);
                 }
               );
+
+              deferred.resolve(); // Resolve only after all queries
             });
           },
           function (error) {
@@ -57,90 +50,258 @@ app.service("storageService", [
             deferred.reject(error);
           }
         );
+      } else {
+        deferred.reject("Cordova or sqlitePlugin not available.");
       }
 
       return deferred.promise;
     };
-
-    // Method to save a task
-    this.saveTask = function (task) {
+    //// ... (rest of the code)
+    // User methods
+    // Method to save a new user
+    this.registerNewUser = function (user) {
       var deferred = $q.defer();
 
       if (isCordova) {
-        // SQLite logic for saving a task
         db.transaction(function (tx) {
           tx.executeSql(
-            "INSERT INTO tasks (title, description, status) VALUES (?, ?, ?)",
-            [task.title, task.description, task.status],
+            "INSERT INTO Users (firstName, lastName, email, password, taskId) VALUES (?, ?, ?, ?, ?)",
+            [
+              user.firstName,
+              user.lastName,
+              user.email,
+              user.password,
+              user.taskId || null,
+            ],
             function (tx, result) {
-              deferred.resolve(result.insertId); // Return the inserted ID
+              console.log("User saved successfully with ID:", result.insertId);
+              deferred.resolve(result.insertId);
             },
             function (tx, error) {
-              console.error("Error saving task to SQLite: " + error.message);
+              console.error("Error saving user to SQLite: " + error.message);
               deferred.reject(error);
             }
           );
         });
       } else {
-        // localForage logic for saving a task in browser
-        localforage.getItem("tasks").then(function (tasks) {
-          tasks = tasks || [];
-          tasks.push(task);
-          localforage
-            .setItem("tasks", tasks)
-            .then(function () {
-              deferred.resolve();
-            })
-            .catch(function (error) {
-              console.error("Error saving task to localForage: " + error);
-              deferred.reject(error);
-            });
-        });
-      }
-
-      return deferred.promise;
-    };
-
-    // Method to get all tasks
-    this.getTasks = function (user) {
-      var deferred = $q.defer();
-
-      if (isCordova) {
-        // SQLite logic for fetching all tasks
-        db.transaction(function (tx) {
-          tx.executeSql(
-            "SELECT * FROM tasks",
-            [],
-            function (tx, result) {
-              var tasks = [];
-              for (var i = 0; i < result.rows.length; i++) {
-                tasks.push(result.rows.item(i));
-              }
-              deferred.resolve(tasks); // Return tasks array
-            },
-            function (tx, error) {
-              console.error(
-                "Error fetching tasks from SQLite: " + error.message
-              );
-              deferred.reject(error);
-            }
-          );
-        });
-      } else {
-        // localForage logic for fetching all tasks in browser
-        localforage
-          .getItem("tasks")
-          .then(function (tasks) {
-            tasks = tasks || [];
-            deferred.resolve(tasks); // Return tasks array
+        const storeInstance = getStoreInstance(user);
+        storeInstance
+          .setItem("userData", user)
+          .then(() => {
+            console.log("User saved to localForage.");
+            deferred.resolve();
           })
-          .catch(function (error) {
-            console.error("Error fetching tasks from localForage: " + error);
+          .catch((error) => {
+            console.error("Error saving user to localForage: " + error.message);
             deferred.reject(error);
           });
       }
 
       return deferred.promise;
     };
+
+    //login User
+    this.loginUser = (user) => {
+      const deferred = $q.defer();
+      console.log("credential", user);
+
+      if (isCordova) {
+        db.transaction(
+          (tx) => {
+            tx.executeSql(
+              "SELECT * FROM Users WHERE email = ? AND password = ?",
+              [user.email, user.password],
+              (tx, result) => {
+                if (result.rows.length > 0) {
+                  const loggedInUser = result.rows.item(0);
+                  // Store logged-in user in a 'loggedUser' store
+                  const storeInstance = getLoggedUserStoreInstance();
+                  storeInstance
+                    .setItem("loggedUser", loggedInUser)
+                    .then(() => {
+                      console.log(
+                        `User ${loggedInUser.email} logged in successfully (localForage).`
+                      );
+                      deferred.resolve(loggedInUser);
+                    })
+                    .catch((error) => {
+                      console.error(
+                        "Error storing logged user: ",
+                        error.message
+                      );
+                      deferred.reject(error);
+                    });
+                } else {
+                  console.log(
+                    "Login failed: Invalid email or password (SQLite)."
+                  );
+                  deferred.reject("Invalid email or password.");
+                }
+              },
+              (tx, error) => {
+                console.error("Error querying Users table: ", error.message);
+                deferred.reject(error);
+              }
+            );
+          },
+          (error) => {
+            console.error("Transaction error: ", error.message);
+            deferred.reject(error);
+          }
+        );
+      } else {
+        // localForage Logic for Login
+        console.log("user---stored", user);
+        const storeInstance = getStoreInstance(user);
+
+        storeInstance
+          .getItem("userData")
+          .then((storedUserData) => {
+            console.log("stored userData", storedUserData);
+            if (storedUserData && storedUserData.password === user.password) {
+              // Store logged-in user in a 'loggedUser' store
+              const storeInstance = getLoggedUserStoreInstance();
+              storeInstance
+                .setItem("loggedUser", storedUserData)
+                .then(() => {
+                  console.log(
+                    `User ${storedUserData.email} logged in successfully (localForage).`
+                  );
+                  deferred.resolve(storedUserData);
+                })
+                .catch((error) => {
+                  console.error("Error storing logged user: ", error.message);
+                  deferred.reject(error);
+                });
+            } else {
+              console.log(
+                "Login failed: Invalid email or password (localForage)."
+              );
+              deferred.reject("Invalid email or password.");
+            }
+          })
+          .catch((error) => {
+            console.error(
+              "Error fetching user details from localForage: ",
+              error
+            );
+            deferred.reject(error);
+          });
+      }
+
+      return deferred.promise;
+    };
+
+    //getUser
+    // Get the currently logged in user
+    this.getUser = () => {
+      var deferred = $q.defer();
+
+      // If using localForage (in browser), fetch user from local storage
+      const storeInstance = getLoggedUserStoreInstance();
+      storeInstance
+        .getItem("loggedUser")
+        .then((storedUserData) => {
+          console.log("finding data");
+          if (storedUserData) {
+            const user = { ...storedUserData, password: undefined };
+            console.log("userdata getData", user);
+            deferred.resolve(user);
+          } else {
+            deferred.resolve(null);
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching user from localForage: ", error);
+          deferred.reject(error);
+        });
+
+      return deferred.promise;
+    };
   },
 ]);
+
+// Task methods
+// Method to save a task
+// this.saveTask = function (user, newTask) {
+//   var deferred = $q.defer();
+
+//   if (isCordova) {
+//     // SQLite logic for saving a task
+//     db.transaction(function (tx) {
+//       tx.executeSql(
+//         "INSERT INTO tasks (id, description, completed, createdAt, dueDate, completedAt) VALUES (?, ?, ?, ?, ?, ?)",
+//         [
+//           newTask.id,
+//           newTask.description,
+//           newTask.completed,
+//           newTask.createdAt,
+//           newTask.dueDate,
+//           newTask.completedAt,
+//         ],
+//         function (tx, result) {
+//           deferred.resolve(result.insertId); // Return the inserted ID
+//         },
+//         function (tx, error) {
+//           console.error("Error saving task to SQLite: " + error.message);
+//           deferred.reject(error);
+//         }
+//       );
+//     });
+//   } else {
+//     // localForage logic for saving a task in browser
+//     const storeInstance = getStoreInstance(user);
+//     storeInstance
+//       .setItem("userTasks", newTask)
+//       .then(function () {
+//         console.log("Task saved to localForage.");
+//       })
+//       .catch((error) => {
+//         console.log("Error saving task to localForage: " + error.message);
+//       });
+//   }
+
+//   return deferred.promise;
+// };
+
+// Method to get tasks for a specific user
+// this.getTasksByUser = function (user) {
+//   var deferred = $q.defer();
+
+//   if (isCordova) {
+//     db.transaction(function (tx) {
+//       tx.executeSql(
+//         "SELECT * FROM tasks WHERE id IN (SELECT taskId FROM Users WHERE id = ?)",
+//         [user.id],
+//         function (tx, result) {
+//           var tasks = [];
+//           for (var i = 0; i < result.rows.length; i++) {
+//             tasks.push(result.rows.item(i));
+//           }
+//           deferred.resolve(tasks);
+//         },
+//         function (tx, error) {
+//           console.error("Error fetching tasks for user: " + error.message);
+//           deferred.reject(error);
+//         }
+//       );
+//     });
+//   } else {
+//     // Browser implementation
+//     const storeInstance = getStoreInstance(user);
+//     storeInstance
+//       .getItem("userTasks")
+//       .then((tasks) => {
+//         console.log("Tasks fetched from localForage:");
+//         deferred.resolve(tasks);
+//       })
+//       .catch((error) => {
+//         console.error("Error fetching tasks for user: " + error.message);
+//         deferred.reject(error);
+//       });
+//   }
+
+//   return deferred.promise;
+// };
+//   },
+// ]);
