@@ -13,7 +13,6 @@ app.service("userService", [
         return storageService
           .getUser()
           .then((resData) => {
-            console.log("responseData After login / getUser", resData);
             this.user = resData;
             return this.user;
           })

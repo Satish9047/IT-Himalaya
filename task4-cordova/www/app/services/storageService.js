@@ -56,7 +56,7 @@ app.service("storageService", [
 
       return deferred.promise;
     };
-    //// ... (rest of the code)
+
     // User methods
     // Method to save a new user
     this.registerNewUser = function (user) {
@@ -103,7 +103,6 @@ app.service("storageService", [
     //login User
     this.loginUser = (user) => {
       const deferred = $q.defer();
-      console.log("credential", user);
 
       if (isCordova) {
         db.transaction(
@@ -151,7 +150,6 @@ app.service("storageService", [
         );
       } else {
         // localForage Logic for Login
-        console.log("user---stored", user);
         const storeInstance = getStoreInstance(user);
 
         storeInstance
@@ -202,10 +200,8 @@ app.service("storageService", [
       storeInstance
         .getItem("loggedUser")
         .then((storedUserData) => {
-          console.log("finding data");
           if (storedUserData) {
             const user = { ...storedUserData, password: undefined };
-            console.log("userdata getData", user);
             deferred.resolve(user);
           } else {
             deferred.resolve(null);

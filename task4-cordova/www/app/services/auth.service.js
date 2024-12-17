@@ -1,6 +1,7 @@
 app.service("authService", [
   "storageService",
   function (storageService) {
+    //register user
     this.registerUser = (user) => {
       return storageService
         .registerNewUser(user)
@@ -27,32 +28,5 @@ app.service("authService", [
           return false;
         });
     };
-
-    // this.loginUser = (user) => {
-    //   const storeInstance = getStoreInstance(user);
-    //   return storeInstance.getItem("userDetails").then((storedUserData) => {
-    //     if (storedUserData && storedUserData.password === user.password) {
-    //       const storeInstance = getLoggedUserStoreInstance();
-
-    //       storeInstance
-    //         .setItem("loggedUser", storedUserData)
-    //         .then(() => {
-    //           console.log(
-    //             `User ${user.email} data stored successfully in loggedUser.`
-    //           );
-    //           return true;
-    //         })
-    //         .catch((err) => {
-    //           console.error(`Error storing user data for ${user.email}:`, err);
-    //           return false;
-    //         });
-
-    //       return { storeInstance: storeInstance, user: storedUserData };
-    //     } else {
-    //       console.log("log fail");
-    //       return false;
-    //     }
-    //   });
-    // };
   },
 ]);
