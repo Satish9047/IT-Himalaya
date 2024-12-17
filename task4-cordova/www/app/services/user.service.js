@@ -1,7 +1,8 @@
 app.service("userService", [
   "$rootScope",
   "$injector",
-  function ($rootScope, $injector) {
+  "storageService",
+  function ($rootScope, $injector, storageService) {
     this.user = {};
 
     // Get User
@@ -9,14 +10,17 @@ app.service("userService", [
       if (this.user && this.user.email) {
         return Promise.resolve(this.user);
       } else {
-        const storeInstance = getLoggedUserStoreInstance();
-        return storeInstance.getItem("loggedUser").then((storedUserData) => {
-          if (storedUserData) {
-            this.user = { ...storedUserData, password: undefined };
+        return storageService
+          .getUser()
+          .then((resData) => {
+            console.log("responseData After login / getUser", resData);
+            this.user = resData;
             return this.user;
-          }
-          return null;
-        });
+          })
+          .catch((error) => {
+            console.log("error while getting user", error);
+            return null;
+          });
       }
     };
 
