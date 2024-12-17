@@ -11,6 +11,23 @@ app.config([
 ]);
 
 app.run([
+  "$rootScope",
+  "storageService",
+  function ($rootScope, storageService) {
+    console.log($rootScope);
+    // Initialize the database when the app starts
+    storageService
+      .initialize()
+      .then(function () {
+        console.log("Database initialized successfully.");
+      })
+      .catch(function (error) {
+        console.log("browser device ");
+      });
+  },
+]);
+
+app.run([
   "$state",
   "userService",
   function run($state, userService) {
