@@ -1,7 +1,8 @@
 app.service("taskService", [
   "$rootScope",
   "userService",
-  function ($rootScope, userService) {
+  "storageService",
+  function ($rootScope, userService, storageService) {
     this.tasks = [];
     this.user = null;
 
@@ -30,8 +31,9 @@ app.service("taskService", [
           return Promise.resolve(this.tasks);
         }
 
-        const storeInstance = getStoreInstance(this.user);
-        const taskData = await storeInstance.getItem("userTasks");
+        const taskData = await storageService.getTasksByUser(this.user);
+        // const storeInstance = getStoreInstance(this.user);
+        // const taskData = await storeInstance.getItem("userTasks");
 
         if (taskData) {
           this.tasks = taskData;
@@ -61,7 +63,7 @@ app.service("taskService", [
     };
 
     // Add a new task
-    this.addTask = async (newTask) => {
+    this.addTask = (newTask) => {
       try {
         if (!this.user || !this.user.email) {
           console.error("User not initialized. Cannot add task.");
@@ -71,14 +73,14 @@ app.service("taskService", [
         this.tasks.push(newTask);
         $rootScope.$broadcast("task:updated", this.tasks);
 
-        const storeInstance = getStoreInstance(this.user);
-        await storeInstance
-          .setItem("userTasks", this.tasks)
+        //using storageService
+        storageService
+          .saveTask(this.user, this.tasks)
           .then(() => {
-            console.log("Task added successfully.");
+            console.log("Task saved successfully.");
           })
-          .catch((err) => {
-            console.error("Error storing tasks:", err);
+          .catch((error) => {
+            console.error("Error saving task:", error);
           });
       } catch (error) {
         console.error("Error adding task:", error);
@@ -94,23 +96,16 @@ app.service("taskService", [
         }
 
         const taskIndex = this.tasks.findIndex((task) => task.id === taskId);
-        if (taskIndex !== -1) {
-          this.tasks.splice(taskIndex, 1);
+        this.tasks.splice(taskIndex, 1);
+        $rootScope.$broadcast("tasks:updated", this.tasks);
 
-          $rootScope.$broadcast("tasks:updated", this.tasks);
-
-          const storeInstance = getStoreInstance(this.user);
-          await storeInstance
-            .setItem("userTasks", this.tasks)
-            .then(() => {
-              console.log("Task deleted successfully.");
-            })
-            .catch((error) => {
-              console.error("Error storing tasks:", error);
-            });
-        } else {
-          console.warn("Task not found:", taskId);
-        }
+        storageService.deleteTaskById(taskId, this.user).then((success) => {
+          if (success) {
+            console.log("Task deleted successfully.");
+          } else {
+            console.warn("Error while deleting task.");
+          }
+        });
       } catch (error) {
         console.error("Error deleting task:", error);
       }
