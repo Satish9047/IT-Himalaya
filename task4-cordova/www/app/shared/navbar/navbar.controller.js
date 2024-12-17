@@ -20,13 +20,16 @@ app.component("appNavbar", {
         }
       };
 
-      userService.getUser().then((user) => {
-        if (user) {
-          initializeData(user);
+      const getUser = async () => {
+        const res = await userService.getUser();
+        if (res) {
+          initializeData(res);
         } else {
           initializeData(null);
         }
-      });
+      };
+
+      getUser();
 
       //Listen to user updated event
       $scope.$on("user:updated", (event, user) => {
