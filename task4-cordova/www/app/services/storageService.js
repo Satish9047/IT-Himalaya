@@ -355,11 +355,6 @@ app.service("storageService", [
     // Mark a task  completed
     this.sendToCompleted = async (taskId, user) => {
       try {
-        if (!user || !user.id) {
-          console.error("User not initialized. Cannot mark task as completed.");
-          return;
-        }
-
         if (isCordova) {
           // Cordova implementation using SQLite
           db.transaction(function (tx) {
