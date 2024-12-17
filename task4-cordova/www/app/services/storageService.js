@@ -351,5 +351,75 @@ app.service("storageService", [
 
       return deferred.promise;
     };
+
+    // Mark a task  completed
+    this.sendToCompleted = async (taskId, user) => {
+      try {
+        if (!user || !user.id) {
+          console.error("User not initialized. Cannot mark task as completed.");
+          return;
+        }
+
+        if (isCordova) {
+          // Cordova implementation using SQLite
+          db.transaction(function (tx) {
+            const completedAt = getFormattedDate();
+
+            tx.executeSql(
+              "UPDATE tasks SET completed = ?, completedAt = ? WHERE id = ? AND id IN (SELECT taskId FROM Users WHERE id = ?)",
+              [true, completedAt, taskId, user.id],
+              function (tx, result) {
+                if (result.rowsAffected > 0) {
+                  console.log(`Task with ID ${taskId} marked as completed.`);
+                  $rootScope.$broadcast("task:updated", {
+                    taskId,
+                    completed: true,
+                  });
+                } else {
+                  console.warn(
+                    `No task found with ID ${taskId} for user ${user.id}.`
+                  );
+                }
+              },
+              function (tx, error) {
+                console.error("Error updating task in SQLite: ", error.message);
+              }
+            );
+          });
+        } else {
+          // Browser implementation using localForage
+          const storeInstance = getStoreInstance(user);
+
+          const tasks = await storeInstance.getItem("userTasks");
+
+          if (tasks && tasks.length > 0) {
+            const task = tasks.find((task) => task.id === taskId);
+            if (task) {
+              task.completed = true;
+              task.completedAt = getFormattedDate();
+
+              // Save updated tasks back to storage
+              await storeInstance
+                .setItem("userTasks", tasks)
+                .then(() => {
+                  console.log("Task marked as completed.");
+                })
+                .catch((error) => {
+                  console.error(
+                    "Error updating task in localForage: ",
+                    error.message
+                  );
+                });
+            } else {
+              console.warn(`Task with ID  not found.`);
+            }
+          } else {
+            console.warn("No tasks found for user.");
+          }
+        }
+      } catch (error) {
+        console.error("Error marking task as completed:", error);
+      }
+    };
   },
 ]);
