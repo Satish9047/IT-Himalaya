@@ -11,18 +11,17 @@ app.config([
 ]);
 
 app.run([
-  "$rootScope",
   "storageService",
-  function ($rootScope, storageService) {
-    console.log($rootScope);
+  function (storageService) {
     // Initialize the database when the app starts
+
     storageService
       .initialize()
       .then(function () {
-        console.log("Database initialized successfully.");
+        console.log("Database (or LocalForage) initialized successfully.");
       })
       .catch(function (error) {
-        console.log("browser device ");
+        console.error("Error:", error);
       });
   },
 ]);

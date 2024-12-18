@@ -24,6 +24,7 @@ app.service("taskService", [
 
     // Load tasks for the current user
     this.loadTask = async () => {
+      console.log("user load", this.user);
       try {
         await this.loadUser();
 
@@ -35,6 +36,8 @@ app.service("taskService", [
 
         if (taskData) {
           this.tasks = taskData;
+          console.log("Tasks loaded successfully.", this.tasks);
+          // $rootScope.$broadcast("task:updated", this.tasks);
         } else {
           console.log("No tasks found.");
           this.tasks = [];
