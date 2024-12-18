@@ -76,7 +76,7 @@ app.service("taskService", [
 
         //using storageService
         storageService
-          .saveTask(this.user, this.tasks)
+          .saveTask(this.user, newTask)
           .then(() => {
             console.log("Task saved successfully.");
           })
@@ -100,8 +100,8 @@ app.service("taskService", [
         this.tasks.splice(taskIndex, 1);
         $rootScope.$broadcast("tasks:updated", this.tasks);
 
-        storageService.deleteTaskById(taskId, this.user).then((success) => {
-          if (success) {
+        storageService.deleteTaskById(this.user, taskId).then((resData) => {
+          if (resData) {
             console.log("Task deleted successfully.");
           } else {
             console.warn("Error while deleting task.");
@@ -128,7 +128,7 @@ app.service("taskService", [
           $rootScope.$broadcast("task:updated", this.tasks);
 
           storageService
-            .sendToCompleted(taskId, this.user)
+            .sendToCompleted(this.user, taskId)
             .then(() => {
               console.log("Task marked as completed successfully.");
             })
