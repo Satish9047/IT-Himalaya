@@ -8,109 +8,107 @@ app.service("storageService", [
       let deferred = $q.defer();
       console.log("Initializing database...");
 
-      document.addEventListener("deviceready", function () {
-        // console.log(" has plugin", window.sqlitePlugin);
-        // console.log("device has", window);
-        // console.log("device has 2", window.device);
-        // console.log("this device is: ", window.device.platform);
+      // document.addEventListener("deviceready", function () {
+      // console.log(" has plugin", window.sqlitePlugin);
+      // console.log("device has", window);
+      // console.log("device has 2", window.device);
+      // console.log("this device is: ", window.device.platform);
 
-        // Check if running on Cordova
+      // Check if running on Cordova
 
-        if (window.device && window.device.platform === "android") {
-          isCordova = true;
-          console.log("Running on Cordova Android.", isCordova);
+      if (window.device && window.device.platform === "Android") {
+        isCordova = true;
+        console.log("Running on Cordova Android.", isCordova);
 
-          // Initialize SQLite database
-          db = window.sqlitePlugin.openDatabase(
-            {
-              name: "taskManager.db",
-              location: "default",
-            },
-            function () {
-              console.log("SQLite database initializing.");
-              db.transaction(
-                function (tx) {
-                  // Enable foreign keys
-                  tx.executeSql(
-                    "PRAGMA foreign_keys = ON;",
-                    [],
-                    function () {
-                      console.log("Foreign keys enabled.");
+        // Initialize SQLite database
+        db = window.sqlitePlugin.openDatabase(
+          {
+            name: "taskManager.db",
+            location: "default",
+          },
+          function () {
+            console.log("SQLite database initializing.");
+            db.transaction(
+              function (tx) {
+                // Enable foreign keys
+                tx.executeSql(
+                  "PRAGMA foreign_keys = ON;",
+                  [],
+                  function () {
+                    console.log("Foreign keys enabled.");
 
-                      // Create Users Table
-                      tx.executeSql(
-                        `CREATE TABLE IF NOT EXISTS Users (
+                    // Create Users Table
+                    tx.executeSql(
+                      `CREATE TABLE IF NOT EXISTS Users (
                         id INTEGER PRIMARY KEY AUTOINCREMENT,
                         firstName TEXT,
                         lastName TEXT,
                         email TEXT,
                         password TEXT
                       )`,
-                        [],
-                        function () {
-                          console.log("Users table created.");
-                        },
-                        function (tx, error) {
-                          console.error(
-                            "Error creating Users table: " + error.message
-                          );
-                        }
-                      );
+                      [],
+                      function () {
+                        console.log("Users table created.");
+                      },
+                      function (tx, error) {
+                        console.error(
+                          "Error creating Users table: " + error.message
+                        );
+                      }
+                    );
 
-                      // Create Tasks Table
-                      tx.executeSql(
-                        `CREATE TABLE IF NOT EXISTS Tasks (
+                    // Create Tasks Table
+                    tx.executeSql(
+                      `CREATE TABLE IF NOT EXISTS Tasks (
                         id INTEGER PRIMARY KEY,
                         description TEXT,
                         completed INTEGER, -- Use INTEGER for BOOLEAN
-                        createdAt DATETIME,
-                        dueDate DATETIME,
-                        completedAt DATETIME,
+                        createdAt TEXT,
+                        dueDate TEXT,
+                        completedAt TEXT,
                         userId INTEGER,
                         FOREIGN KEY (userId) REFERENCES Users(id)
                       )`,
-                        [],
-                        function () {
-                          console.log("Tasks table created.");
-                        },
-                        function (tx, error) {
-                          console.error(
-                            "Error creating Tasks table: " + error.message
-                          );
-                        }
-                      );
-                    },
-                    function (error) {
-                      console.error(
-                        "Error enabling foreign keys: " + error.message
-                      );
-                      deferred.reject(error);
-                    }
-                  );
-                },
-                function () {
-                  console.log("Database setup complete.");
-                  deferred.resolve();
-                },
-                function (error) {
-                  console.error(
-                    "Error executing transaction: " + error.message
-                  );
-                  deferred.reject(error);
-                }
-              );
-            },
-            function (error) {
-              console.error("Error opening SQLite database: " + error.message);
-              deferred.reject(error);
-            }
-          );
-        } else {
-          // Browser environment
-          console.log("Running in a browser. SQLite is not available.");
-          deferred.resolve(); // Resolve promise for browser environments
-        }
-      });
+                      [],
+                      function () {
+                        console.log("Tasks table created.");
+                      },
+                      function (tx, error) {
+                        console.error(
+                          "Error creating Tasks table: " + error.message
+                        );
+                      }
+                    );
+                  },
+                  function (error) {
+                    console.error(
+                      "Error enabling foreign keys: " + error.message
+                    );
+                    deferred.reject(error);
+                  }
+                );
+              },
+              function () {
+                console.log("Database setup complete.");
+                deferred.resolve();
+              },
+              function (error) {
+                console.error("Error executing transaction: " + error.message);
+                deferred.reject(error);
+              }
+            );
+          },
+          function (error) {
+            console.error("Error opening SQLite database: " + error.message);
+            deferred.reject(error);
+          }
+        );
+      } else {
+        // Browser environment
+        console.log("Running in a browser. SQLite is not available.");
+        deferred.resolve(); // Resolve promise for browser environments
+      }
+      // });
       return deferred.promise;
     };
 
@@ -272,6 +270,7 @@ app.service("storageService", [
     // Method to save a task
     this.saveTask = function (user, newTask) {
       let deferred = $q.defer();
+      console.log("user:", user, "newTask:", newTask);
 
       if (isCordova) {
         // SQLite logic for saving a task
@@ -284,7 +283,7 @@ app.service("storageService", [
               newTask.completed,
               newTask.createdAt,
               newTask.dueDate,
-              newTask.completedAt || null,
+              "not completed",
             ],
             function (tx, result) {
               deferred.resolve(result.insertId); // Return the inserted ID
