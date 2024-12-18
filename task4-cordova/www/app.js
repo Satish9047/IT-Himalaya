@@ -13,16 +13,21 @@ app.config([
 app.run([
   "storageService",
   function (storageService) {
-    // Initialize the database when the app starts
-
-    storageService
-      .initialize()
-      .then(function () {
-        console.log("Database (or LocalForage) initialized successfully.");
-      })
-      .catch(function (error) {
-        console.error("Error:", error);
-      });
+    // Wait for the device to be ready before initializing the database
+    document.addEventListener(
+      "deviceready",
+      function () {
+        storageService
+          .initialize()
+          .then(function () {
+            console.log("Database or LocalForage initialized successfully.");
+          })
+          .catch(function (error) {
+            console.error("Error initializing database:", error);
+          });
+      },
+      false
+    );
   },
 ]);
 
