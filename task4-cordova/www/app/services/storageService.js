@@ -1,78 +1,131 @@
 app.service("storageService", [
   "$q",
   function ($q) {
-    var isCordova = false;
-    var db = null;
+    let isCordova = false;
+    let db = null;
 
     this.initialize = function () {
-      var deferred = $q.defer();
+      let deferred = $q.defer();
       console.log("Initializing database...");
 
-      if (window.cordova && window.sqlitePlugin) {
-        isCordova = true;
+      document.addEventListener("deviceready", function () {
+        // console.log(" has plugin", window.sqlitePlugin);
+        // console.log("device has", window);
+        // console.log("device has 2", window.device);
+        // console.log("this device is: ", window.device.platform);
 
-        db = window.sqlitePlugin.openDatabase(
-          { name: "taskManager.db", location: "default" },
-          function () {
-            console.log("SQLite database initialized.");
-            db.transaction(function (tx) {
-              tx.executeSql("PRAGMA foreign_keys = ON;", []);
+        // Check if running on Cordova
 
-              // Users Table
-              tx.executeSql(
-                "CREATE TABLE IF NOT EXISTS Users (id INTEGER PRIMARY KEY, firstName TEXT, lastName TEXT, email TEXT, password TEXT)",
-                [],
-                function () {
-                  console.log("Users table created.");
+        if (window.device && window.device.platform === "android") {
+          isCordova = true;
+          console.log("Running on Cordova Android.", isCordova);
+
+          // Initialize SQLite database
+          db = window.sqlitePlugin.openDatabase(
+            {
+              name: "taskManager.db",
+              location: "default",
+            },
+            function () {
+              console.log("SQLite database initializing.");
+              db.transaction(
+                function (tx) {
+                  // Enable foreign keys
+                  tx.executeSql(
+                    "PRAGMA foreign_keys = ON;",
+                    [],
+                    function () {
+                      console.log("Foreign keys enabled.");
+
+                      // Create Users Table
+                      tx.executeSql(
+                        `CREATE TABLE IF NOT EXISTS Users (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        firstName TEXT,
+                        lastName TEXT,
+                        email TEXT,
+                        password TEXT
+                      )`,
+                        [],
+                        function () {
+                          console.log("Users table created.");
+                        },
+                        function (tx, error) {
+                          console.error(
+                            "Error creating Users table: " + error.message
+                          );
+                        }
+                      );
+
+                      // Create Tasks Table
+                      tx.executeSql(
+                        `CREATE TABLE IF NOT EXISTS Tasks (
+                        id INTEGER PRIMARY KEY,
+                        description TEXT,
+                        completed INTEGER, -- Use INTEGER for BOOLEAN
+                        createdAt DATETIME,
+                        dueDate DATETIME,
+                        completedAt DATETIME,
+                        userId INTEGER,
+                        FOREIGN KEY (userId) REFERENCES Users(id)
+                      )`,
+                        [],
+                        function () {
+                          console.log("Tasks table created.");
+                        },
+                        function (tx, error) {
+                          console.error(
+                            "Error creating Tasks table: " + error.message
+                          );
+                        }
+                      );
+                    },
+                    function (error) {
+                      console.error(
+                        "Error enabling foreign keys: " + error.message
+                      );
+                      deferred.reject(error);
+                    }
+                  );
                 },
-                function (tx, error) {
-                  console.error("Error creating Users table: " + error.message);
+                function () {
+                  console.log("Database setup complete.");
+                  deferred.resolve();
+                },
+                function (error) {
+                  console.error(
+                    "Error executing transaction: " + error.message
+                  );
+                  deferred.reject(error);
                 }
               );
-
-              // Tasks Table
-              tx.executeSql(
-                "CREATE TABLE IF NOT EXISTS Tasks (id INTEGER PRIMARY KEY, description TEXT, completed BOOLEAN, createdAt DATETIME, dueDate DATETIME, completedAt DATETIME, userId INTEGER, FOREIGN KEY (userId) REFERENCES Users(id))",
-                [],
-                function () {
-                  console.log("Tasks table created.");
-                },
-                function (tx, error) {
-                  console.error("Error creating Tasks table: " + error.message);
-                }
-              );
-
-              deferred.resolve(); // Resolve only after all queries
-            });
-          },
-          function (error) {
-            console.error("Error opening SQLite database: " + error.message);
-            deferred.reject(error);
-          }
-        );
-      } else {
-        deferred.reject("Cordova or sqlitePlugin not available.");
-      }
-
+            },
+            function (error) {
+              console.error("Error opening SQLite database: " + error.message);
+              deferred.reject(error);
+            }
+          );
+        } else {
+          // Browser environment
+          console.log("Running in a browser. SQLite is not available.");
+          deferred.resolve(); // Resolve promise for browser environments
+        }
+      });
       return deferred.promise;
     };
 
     // User methods
     // Method to save a new user
     this.registerNewUser = function (user) {
-      var deferred = $q.defer();
+      let deferred = $q.defer();
+
+      console.log("Saving user: cordova:", isCordova);
 
       if (isCordova) {
         db.transaction(function (tx) {
           tx.executeSql(
-            "INSERT INTO Users (firstName, lastName, email, password, taskId) VALUES (?, ?, ?, ?, ?)",
-            [
-              user.firstName,
-              user.lastName,
-              user.email,
-              user.password,
-              user.taskId || null,
-            ],
+            "INSERT INTO Users (firstName, lastName, email, password) VALUES (?, ?, ?, ?)",
+            [user.firstName, user.lastName, user.email, user.password],
             function (tx, result) {
               console.log("User saved successfully with ID:", result.insertId);
               deferred.resolve(result.insertId);
@@ -193,7 +246,7 @@ app.service("storageService", [
     //getUser
     // Get the currently logged in user
     this.getUser = () => {
-      var deferred = $q.defer();
+      let deferred = $q.defer();
 
       // If using localForage (in browser), fetch user from local storage
       const storeInstance = getLoggedUserStoreInstance();
@@ -218,7 +271,7 @@ app.service("storageService", [
     // Task methods
     // Method to save a task
     this.saveTask = function (user, newTask) {
-      var deferred = $q.defer();
+      let deferred = $q.defer();
 
       if (isCordova) {
         // SQLite logic for saving a task
@@ -231,7 +284,7 @@ app.service("storageService", [
               newTask.completed,
               newTask.createdAt,
               newTask.dueDate,
-              newTask.completedAt,
+              newTask.completedAt || null,
             ],
             function (tx, result) {
               deferred.resolve(result.insertId); // Return the inserted ID
@@ -260,16 +313,16 @@ app.service("storageService", [
 
     // Method to get tasks for a specific user
     this.getTasksByUser = function (user) {
-      var deferred = $q.defer();
+      let deferred = $q.defer();
 
       if (isCordova) {
         db.transaction(function (tx) {
           tx.executeSql(
-            "SELECT * FROM tasks WHERE id IN (SELECT taskId FROM Users WHERE id = ?)",
+            "SELECT * FROM Tasks WHERE userId = ?;",
             [user.id],
             function (tx, result) {
-              var tasks = [];
-              for (var i = 0; i < result.rows.length; i++) {
+              let tasks = [];
+              for (let i = 0; i < result.rows.length; i++) {
                 tasks.push(result.rows.item(i));
               }
               deferred.resolve(tasks);
@@ -299,12 +352,12 @@ app.service("storageService", [
 
     //deleteTask
     this.deleteTaskById = function (taskId, user) {
-      var deferred = $q.defer();
+      let deferred = $q.defer();
 
       if (isCordova) {
         db.transaction(function (tx) {
           tx.executeSql(
-            "DELETE FROM tasks WHERE id = ? AND id IN (SELECT taskId FROM Users WHERE id = ?)",
+            "DELETE FROM Tasks WHERE id = ? AND userId = ?)",
             [taskId, user.id],
             function (tx, result) {
               if (result.rowsAffected > 0) {
@@ -361,7 +414,7 @@ app.service("storageService", [
             const completedAt = getFormattedDate();
 
             tx.executeSql(
-              "UPDATE tasks SET completed = ?, completedAt = ? WHERE id = ? AND id IN (SELECT taskId FROM Users WHERE id = ?)",
+              "UPDATE Tasks SET completed = ?, completedAt = ? WHERE id = ? AND userId = ?",
               [true, completedAt, taskId, user.id],
               function (tx, result) {
                 if (result.rowsAffected > 0) {
