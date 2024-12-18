@@ -1,0 +1,58 @@
+<!-- Todo Task -->
+<div>
+  <h3 class="fs-4">ToDo Task</h3>
+  <ol class="list-group" style="min-height: 200px">
+    <div
+      class="text-center"
+      ng-if="($TodoCtrl.taskList | filter: { completed: false }).length === 0"
+    >
+      <p>empty task</p>
+    </div>
+    <!-- list of todo task -->
+    <li
+      ng-repeat="task in $TodoCtrl.taskList | filter: { completed: false } track by task.id"
+      class="list-group-item bg-warning-subtle shadow mb-3 rounded d-flex gap-2"
+    >
+      <figure>
+        <img
+          src="/public/images/todo.png"
+          alt="task image"
+          class="img-fluid"
+          style="width: 80px; height: 80px"
+        />
+      </figure>
+      <div class="w-100">
+        <p class="fs-5">{{ task.description }}</p>
+        <div
+          class="taskDetails d-flex flex-column flex-md-row justify-content-between lh-1"
+        >
+          <div>
+            <div
+              class="info d-flex flex-column flex-md-row text-light-emphasis gap-md-3"
+            >
+              <p class="pb-md-0">createdAt: {{ task.createdAt }}</p>
+              <p class="pb-md-0">Due: {{ task.dueDate }}</p>
+            </div>
+          </div>
+          <div>
+            <!-- submit button -->
+            <button
+              class="btn btn-warning shadow"
+              ng-click="$TodoCtrl.deleteTask(task.id)"
+            >
+              Delete
+            </button>
+
+            <!-- completed button -->
+            <button
+              class="btn btn-primary shadow"
+              ng-click="$TodoCtrl.sendTaskToCompleted(task.id)"
+            >
+              Completed
+            </button>
+          </div>
+        </div>
+      </div>
+    </li>
+  </ol>
+</div>

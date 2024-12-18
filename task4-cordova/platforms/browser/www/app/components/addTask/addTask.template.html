@@ -1,0 +1,23 @@
+<!-- Add Task -->
+<form
+  ng-submit="$AddCtrl.addTask()"
+  name="addTaskForm"
+  class="d-flex flex-row justify-content-center gap-3 mb-3"
+>
+  <!-- ng-model is use to bind the input value to the taskDescription -->
+  <input
+    type="text"
+    id="taskDescription"
+    ng-model="$AddCtrl.taskDescription"
+    placeholder="Enter Task Description"
+    class="form-control w-md-50 fs-5 shadow"
+    required
+  />
+  <button
+    id="addTaskBtn"
+    type="submit"
+    class="btn btn-primary w-10 w-25 shadow"
+  >
+    Add Task
+  </button>
+</form>
