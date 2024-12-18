@@ -276,7 +276,7 @@ app.service("storageService", [
         // SQLite logic for saving a task
         db.transaction(function (tx) {
           tx.executeSql(
-            "INSERT INTO tasks (id, description, completed, createdAt, dueDate, completedAt) VALUES (?, ?, ?, ?, ?, ?)",
+            "INSERT INTO tasks (id, description, completed, createdAt, dueDate, completedAt, userId) VALUES (?, ?, ?, ?, ?, ?, ?)",
             [
               newTask.id,
               newTask.description,
@@ -284,6 +284,7 @@ app.service("storageService", [
               newTask.createdAt,
               newTask.dueDate,
               "not completed",
+              user.id,
             ],
             function (tx, result) {
               deferred.resolve(result.insertId); // Return the inserted ID
@@ -350,13 +351,14 @@ app.service("storageService", [
     };
 
     //deleteTask
-    this.deleteTaskById = function (taskId, user) {
+    this.deleteTaskById = function (user, taskId) {
       let deferred = $q.defer();
 
       if (isCordova) {
         db.transaction(function (tx) {
+          console.log("user:", user, "taskId:", taskId);
           tx.executeSql(
-            "DELETE FROM Tasks WHERE id = ? AND userId = ?)",
+            "DELETE FROM Tasks WHERE id = ? AND userId = ?;",
             [taskId, user.id],
             function (tx, result) {
               if (result.rowsAffected > 0) {
@@ -405,11 +407,13 @@ app.service("storageService", [
     };
 
     // Mark a task  completed
-    this.sendToCompleted = async (taskId, user) => {
+    this.sendToCompleted = async (user, taskId) => {
+      let deferred = $q.defer();
       try {
         if (isCordova) {
           // Cordova implementation using SQLite
           db.transaction(function (tx) {
+            console.log("user:", user, "taskId:", taskId);
             const completedAt = getFormattedDate();
 
             tx.executeSql(
@@ -418,18 +422,17 @@ app.service("storageService", [
               function (tx, result) {
                 if (result.rowsAffected > 0) {
                   console.log(`Task with ID ${taskId} marked as completed.`);
-                  $rootScope.$broadcast("task:updated", {
-                    taskId,
-                    completed: true,
-                  });
+                  deferred.resolve(true);
                 } else {
-                  console.warn(
+                  console.log(
                     `No task found with ID ${taskId} for user ${user.id}.`
                   );
+                  deferred.resolve(false);
                 }
               },
               function (tx, error) {
                 console.error("Error updating task in SQLite: ", error.message);
+                deferred.reject(error);
               }
             );
           });
@@ -450,23 +453,29 @@ app.service("storageService", [
                 .setItem("userTasks", tasks)
                 .then(() => {
                   console.log("Task marked as completed.");
+                  deferred.resolve(true);
                 })
                 .catch((error) => {
                   console.error(
                     "Error updating task in localForage: ",
                     error.message
                   );
+                  deferred.reject(error);
                 });
             } else {
               console.warn(`Task with ID  not found.`);
+              deferred.resolve(false);
             }
           } else {
             console.warn("No tasks found for user.");
+            deferred.resolve(false);
           }
         }
       } catch (error) {
         console.error("Error marking task as completed:", error);
+        deferred.reject(error);
       }
+      return deferred.promise;
     };
   },
 ]);
