@@ -23,6 +23,9 @@
     },
     "cordova-plugin-device": {
       "PACKAGE_NAME": "com.example.hello"
+    },
+    "http-plugin": {
+      "PACKAGE_NAME": "com.example.hello"
     }
   },
   "dependent_plugins": {},
@@ -60,10 +63,19 @@
       "id": "cordova-plugin-device.DeviceProxy",
       "pluginId": "cordova-plugin-device",
       "runs": true
+    },
+    {
+      "file": "plugins/http-plugin/www/HttpPlugin.js",
+      "id": "http-plugin.HttpPlugin",
+      "pluginId": "http-plugin",
+      "clobbers": [
+        "cordova.plugins.HttpPlugin"
+      ]
     }
   ],
   "plugin_metadata": {
     "cordova-sqlite-storage": "6.1.0",
-    "cordova-plugin-device": "3.0.0"
+    "cordova-plugin-device": "3.0.0",
+    "http-plugin": "1.0.0"
   }
 }

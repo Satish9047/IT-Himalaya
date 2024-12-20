@@ -17,6 +17,29 @@ app.run([
     document.addEventListener(
       "deviceready",
       function () {
+        let url = "https://jsonplaceholder.typicode.com/todos/1";
+        //
+        if (
+          window.cordova.plugins.HttpPlugin &&
+          window.cordova.plugins.HttpPlugin.getHttpRequest
+        ) {
+          window.cordova.plugins.HttpPlugin.getHttpRequest(
+            url,
+            function (response) {
+              console.log("Success: ", response);
+            },
+            function (error) {
+              console.error("Error: ", error);
+            }
+          );
+          // Call the plugin
+        } else {
+          console.error("HttpPlugin is not available.");
+        }
+
+        //
+
+        //
         storageService
           .initialize()
           .then(function () {

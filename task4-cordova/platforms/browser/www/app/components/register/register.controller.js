@@ -8,6 +8,7 @@ angular.module("registerModule", []).component("appRegister", {
       this.user = {};
 
       this.onRegister = async (event) => {
+        //try catch
         event.preventDefault();
         const res = await authService.registerUser(this.user);
         if (res) {

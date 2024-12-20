@@ -14,5 +14,13 @@
     },
     "is_top_level": true,
     "variables": {}
+  },
+  "http-plugin": {
+    "source": {
+      "type": "local",
+      "path": "C:\\Users\\Satish\\Desktop\\IT-Himalaya\\task4-cordova\\node_modules\\http-plugin"
+    },
+    "is_top_level": true,
+    "variables": {}
   }
 }

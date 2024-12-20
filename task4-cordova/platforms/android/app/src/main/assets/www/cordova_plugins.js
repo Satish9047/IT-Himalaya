@@ -15,10 +15,19 @@ cordova.define('cordova/plugin_list', function(require, exports, module) {
       "clobbers": [
         "device"
       ]
+    },
+    {
+      "id": "http-plugin.HttpPlugin",
+      "file": "plugins/http-plugin/www/HttpPlugin.js",
+      "pluginId": "http-plugin",
+      "clobbers": [
+        "cordova.plugins.HttpPlugin"
+      ]
     }
   ];
   module.exports.metadata = {
     "cordova-sqlite-storage": "6.1.0",
-    "cordova-plugin-device": "3.0.0"
+    "cordova-plugin-device": "3.0.0",
+    "http-plugin": "1.0.0"
   };
 });

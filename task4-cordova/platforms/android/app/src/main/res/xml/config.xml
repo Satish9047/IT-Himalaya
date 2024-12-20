@@ -6,6 +6,9 @@
     <feature name="Device">
         <param name="android-package" value="org.apache.cordova.device.Device" />
     </feature>
+    <feature name="HttpPlugin">
+        <param name="android-package" value="httpplugin.HttpPlugin" />
+    </feature>
     <name>Task</name>
     <description>Sample Apache Cordova App</description>
     <author email="dev@cordova.apache.org" href="https://cordova.apache.org">

@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='utf-8'?>
+<plugin id="http-plugin" version="1.0.0" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
+    <name>HttpPlugin</name>
+    <js-module name="HttpPlugin" src="www/HttpPlugin.js">
+        <clobbers target="cordova.plugins.HttpPlugin" />
+    </js-module>
+    <platform name="android">
+        <config-file parent="/*" target="res/xml/config.xml">
+            <feature name="HttpPlugin">
+                <param name="android-package" value="httpplugin.HttpPlugin" />
+            </feature>
+        </config-file>
+        <config-file parent="/*" target="AndroidManifest.xml">
+            <uses-permission android:name="android.permission.INTERNET" />
+        </config-file>
+        <source-file src="src/android/HttpPlugin.java" target-dir="src/httpplugin/HttpPlugin" />
+    </platform>
+</plugin>

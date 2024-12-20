@@ -13,16 +13,44 @@ app.config([
 app.run([
   "storageService",
   function (storageService) {
-    // Initialize the database when the app starts
+    // Wait for the device to be ready before initializing the database
+    document.addEventListener(
+      "deviceready",
+      function () {
+        let url = "https://jsonplaceholder.typicode.com/todos/1";
+        //
+        if (
+          window.cordova.plugins.HttpPlugin &&
+          window.cordova.plugins.HttpPlugin.getHttpRequest
+        ) {
+          window.HttpPlugin.getHttpRequest(
+            url,
+            function (response) {
+              console.log("Success: ", response);
+            },
+            function (error) {
+              console.error("Error: ", error);
+            }
+          );
+          // Call the plugin
+        } else {
+          console.error("HttpPlugin is not available.");
+        }
 
-    storageService
-      .initialize()
-      .then(function () {
-        console.log("Database (or LocalForage) initialized successfully.");
-      })
-      .catch(function (error) {
-        console.error("Error:", error);
-      });
+        //
+
+        //
+        storageService
+          .initialize()
+          .then(function () {
+            console.log("Database or LocalForage initialized successfully.");
+          })
+          .catch(function (error) {
+            console.error("Error initializing database:", error);
+          });
+      },
+      false
+    );
   },
 ]);
 

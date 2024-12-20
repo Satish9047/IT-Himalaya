@@ -19,13 +19,15 @@
     ],
     "plugins": {
       "cordova-sqlite-storage": {},
-      "cordova-plugin-device": {}
+      "cordova-plugin-device": {},
+      "http-plugin": {}
     }
   },
   "devDependencies": {
     "cordova-android": "^13.0.0",
     "cordova-browser": "^7.0.0",
     "cordova-plugin-device": "^3.0.0",
-    "cordova-sqlite-storage": "^6.1.0"
+    "cordova-sqlite-storage": "^6.1.0",
+    "http-plugin": "file:../task5-custom-http-plugin/HttpPlugin"
   }
 }

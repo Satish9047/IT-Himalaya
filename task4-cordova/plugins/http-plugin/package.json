@@ -1,0 +1,17 @@
+{
+  "name": "http-plugin",
+  "version": "1.0.0",
+  "description": "",
+  "cordova": {
+    "id": "http-plugin",
+    "platforms": [
+      "android"
+    ]
+  },
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-android"
+  ],
+  "author": "Satish Prajapati",
+  "license": "ISC"
+}

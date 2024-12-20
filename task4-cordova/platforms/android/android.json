@@ -15,6 +15,20 @@
             {
               "xml": "<feature name=\"Device\"><param name=\"android-package\" value=\"org.apache.cordova.device.Device\" /></feature>",
               "count": 1
+            },
+            {
+              "xml": "<feature name=\"HttpPlugin\"><param name=\"android-package\" value=\"httpplugin.HttpPlugin\" /></feature>",
+              "count": 1
+            }
+          ]
+        }
+      },
+      "AndroidManifest.xml": {
+        "parents": {
+          "/*": [
+            {
+              "xml": "<uses-permission android:name=\"android.permission.INTERNET\" />",
+              "count": 1
             }
           ]
         }
@@ -26,6 +40,9 @@
       "PACKAGE_NAME": "com.example.hello"
     },
     "cordova-plugin-device": {
+      "PACKAGE_NAME": "com.example.hello"
+    },
+    "http-plugin": {
       "PACKAGE_NAME": "com.example.hello"
     }
   },
@@ -46,10 +63,19 @@
       "clobbers": [
         "device"
       ]
+    },
+    {
+      "id": "http-plugin.HttpPlugin",
+      "file": "plugins/http-plugin/www/HttpPlugin.js",
+      "pluginId": "http-plugin",
+      "clobbers": [
+        "cordova.plugins.HttpPlugin"
+      ]
     }
   ],
   "plugin_metadata": {
     "cordova-sqlite-storage": "6.1.0",
-    "cordova-plugin-device": "3.0.0"
+    "cordova-plugin-device": "3.0.0",
+    "http-plugin": "1.0.0"
   }
 }

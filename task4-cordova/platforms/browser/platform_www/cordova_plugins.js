@@ -33,13 +33,22 @@ module.exports = [
         "id": "cordova-plugin-device.DeviceProxy",
         "pluginId": "cordova-plugin-device",
         "runs": true
+    },
+    {
+        "file": "plugins/http-plugin/www/HttpPlugin.js",
+        "id": "http-plugin.HttpPlugin",
+        "pluginId": "http-plugin",
+        "clobbers": [
+            "cordova.plugins.HttpPlugin"
+        ]
     }
 ];
 module.exports.metadata = 
 // TOP OF METADATA
 {
     "cordova-sqlite-storage": "6.1.0",
-    "cordova-plugin-device": "3.0.0"
+    "cordova-plugin-device": "3.0.0",
+    "http-plugin": "1.0.0"
 }
 // BOTTOM OF METADATA
 });
