@@ -1,51 +1,76 @@
-package http-plugin;
+package httpplugin;
 
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CallbackContext;
-
-import java.net.URI;
-import java.net.http.httpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.net.http.HttpHeaders;
-import java.time.Duration;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 /**
- * This class echoes a string called from JavaScript.
+ * This class handles HTTP GET requests from JavaScript.
  */
 public class HttpPlugin extends CordovaPlugin {
+
     @Override
-    public boolean execute(String action, String url, CallbackContext callbackContext) throws JSONException {
-        if(action.equals("getHttpRequest")){
+    public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
+        if (action.equals("getHttpRequest")) {
+            String url = args.getString(0);
             this.getHttpRequest(url, callbackContext);
             return true;
         }
         return false;
     }
 
-     //HttpRequest
-    private Object getHttpRequest(String url,  CallbackContext callbackContext){
-        try{
+    private void getHttpRequest(String urlString, CallbackContext callbackContext) {
+        // Use Cordova's thread pool to ensure the request runs on a background thread
+        cordova.getThreadPool().execute(() -> {
+            HttpURLConnection connection = null;
+            BufferedReader reader = null;
 
-            HttpClient client = HttpClient.newHttpClient().newBuilder().connectTimeout(Duration.ofSeconds(5)).build();
-            HttpRequest request =  HttpRequest.newBuilder().url(URI.create(url)).GET().build();
+            try {
+                // Create URL object
+                URL url = new URL(urlString);
+                // Open a connection
+                connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("GET");
+                connection.setConnectTimeout(5000);
+                connection.setReadTimeout(5000);t
 
-            HttpResponse <String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-            if(response.statusCode() == 200){
-                JSONObject jsonResponse = new JSONObject(response.body());
-                system.out.println(jsonResponse);
-                callbackContext.success(jsonResponse);
-
-            }else{
-                system.out.println("Error: " + response.statusCode());
-                callbackContext.error("Error: " + response.statusCode());
+                // Get response code
+                int responseCode = connection.getResponseCode();
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    // Read the response
+                    reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                    StringBuilder response = new StringBuilder();
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        response.append(line);
+                    }
+                    // Convert response to JSON and send success callback
+                    JSONObject jsonResponse = new JSONObject(response.toString());
+                    callbackContext.success(jsonResponse);
+                } else {
+                    // Send error callback for non-200 status codes
+                    callbackContext.error("HTTP error code: " + responseCode);
+                }
+            } catch (Exception e) {
+                callbackContext.error("Request failed: " + e.getMessage());
+            } finally {
+                // Close resources
+                if (reader != null) {
+                    reader.close();
+                }
+                if (connection != null) {
+                    connection.disconnect();
+                } 
             }
-        }
+        });
     }
 }
-
