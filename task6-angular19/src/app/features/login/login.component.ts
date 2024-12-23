@@ -1,12 +1,15 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import {
   FormGroup,
   FormControl,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+
+import { AuthService } from '../../services/auth.service';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-login',
@@ -18,7 +21,11 @@ export class LoginComponent {
   isLoading = false;
   error: string | null = null;
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private userService: UserService,
+  ) {}
 
   loginForm: FormGroup = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
@@ -28,9 +35,23 @@ export class LoginComponent {
     ]),
   });
 
-  onSubmit() {
+  async onSubmit() {
     this.isLoading = true;
     console.log(this.loginForm.value);
+    try {
+      const response = await this.authService.loginUser(this.loginForm.value);
+      if (response.success && response.data) {
+        console.log(response.message);
+        this.router.navigate(['/dashboard']);
+        this.userService.setUser(response.data);
+      } else {
+        console.log(response.message);
+        this.error = response.message;
+      }
+    } catch (error: any) {
+      console.log(error.message);
+      this.error = error.message;
+    }
     this.router.navigate(['/dashboard']);
     this.isLoading = false;
   }
