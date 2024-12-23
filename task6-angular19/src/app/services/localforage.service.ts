@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import localForage from 'localforage';
-import { User } from '../interface/interface';
+import { LoginData } from '../interface/interface';
 
 @Injectable({
   providedIn: 'root',
@@ -9,7 +9,7 @@ import { User } from '../interface/interface';
 export class LocalforageService {
   constructor() {}
 
-  getStoreInstance(user: User) {
+  getStoreInstance(user: LoginData) {
     const storeName = user.email.replace('@', '').replace('.', '');
     const storeInstance = localForage.createInstance({
       name: `Users`,
