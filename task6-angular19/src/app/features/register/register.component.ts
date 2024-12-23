@@ -8,6 +8,9 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 
+import { AuthService } from '../../services/auth.service';
+import { Response } from '../../interface/interface';
+
 @Component({
   selector: 'app-register',
   imports: [ReactiveFormsModule, CommonModule],
@@ -18,7 +21,10 @@ export class RegisterComponent {
   isLoading = false;
   error: string | null = null;
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+  ) {}
 
   registerForm: FormGroup = new FormGroup({
     firstName: new FormControl('', [
@@ -36,11 +42,26 @@ export class RegisterComponent {
     ]),
   });
 
-  //unSubmit method
-  onSubmit(): void {
+  //Register Method
+  async onSubmit() {
     this.isLoading = true;
     console.log(this.registerForm.value);
-    this.router.navigate(['/login']);
+    try {
+      const response: Response = await this.authService.registerUser(
+        this.registerForm.value,
+      );
+      if (response.success) {
+        console.log(response.message);
+        this.router.navigate(['/login']);
+      } else {
+        console.log(response.message);
+        this.error = response.message;
+      }
+    } catch (error: any) {
+      console.error('Error registering user: ' + error.message);
+      this.error = 'Unable to Register User';
+    }
+
     this.isLoading = false;
   }
 }
