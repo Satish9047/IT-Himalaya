@@ -1,5 +1,6 @@
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import {
   FormGroup,
   FormControl,
@@ -17,7 +18,7 @@ export class RegisterComponent {
   isLoading = false;
   error: string | null = null;
 
-  constructor() {}
+  constructor(private router: Router) {}
 
   registerForm: FormGroup = new FormGroup({
     firstName: new FormControl('', [
@@ -39,6 +40,7 @@ export class RegisterComponent {
   onSubmit(): void {
     this.isLoading = true;
     console.log(this.registerForm.value);
+    this.router.navigate(['/login']);
     this.isLoading = false;
   }
 }

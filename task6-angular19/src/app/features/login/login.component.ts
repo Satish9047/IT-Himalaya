@@ -1,5 +1,6 @@
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import {
   FormGroup,
   FormControl,
@@ -17,7 +18,7 @@ export class LoginComponent {
   isLoading = false;
   error: string | null = null;
 
-  constructor() {}
+  constructor(private router: Router) {}
 
   loginForm: FormGroup = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
@@ -30,6 +31,7 @@ export class LoginComponent {
   onSubmit() {
     this.isLoading = true;
     console.log(this.loginForm.value);
+    this.router.navigate(['/dashboard']);
     this.isLoading = false;
   }
 }
