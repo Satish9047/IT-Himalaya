@@ -2,7 +2,12 @@
   <div class="card shadow-lg p-4" style="width: 100%; max-width: 500px">
     <h2 class="text-center mb-2">Login</h2>
     <!-- Form -->
-    <form name="form" class="row g-3">
+    <form
+      name="form"
+      class="row g-3"
+      [formGroup]="loginForm"
+      (ngSubmit)="onSubmit()"
+    >
       <!-- Email -->
       <div>
         <label for="email" class="form-label">Email</label>
@@ -12,10 +17,25 @@
           name="email"
           class="form-control"
           placeholder="example@profiler.com"
+          formControlName="email"
         />
         <div>
-          <span class="text-danger">Email is Mandatory</span>
-          <span class="text-danger">Invalid Email</span>
+          <span
+            *ngIf="
+              loginForm.get('email')?.errors?.['required'] &&
+              loginForm.get('email')?.touched
+            "
+            class="text-danger"
+            >Email is Mandatory</span
+          >
+          <span
+            *ngIf="
+              loginForm.get('email')?.errors?.['email'] &&
+              loginForm.get('email')?.touched
+            "
+            class="text-danger"
+            >Invalid Email</span
+          >
         </div>
       </div>
 
@@ -28,10 +48,23 @@
           name="password"
           class="form-control"
           placeholder="******"
+          formControlName="password"
         />
         <div>
-          <span class="text-danger">Email is Mandatory</span>
-          <span class="text-danger"
+          <span
+            *ngIf="
+              loginForm.get('password')?.errors?.['required'] &&
+              loginForm.get('password')?.touched
+            "
+            class="text-danger"
+            >Password is Mandatory</span
+          >
+          <span
+            *ngIf="
+              loginForm.get('password')?.errors?.['minlength'] &&
+              loginForm.get('password')?.touched
+            "
+            class="text-danger"
             >Password must be at least 8 characters</span
           >
         </div>
