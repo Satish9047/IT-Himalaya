@@ -1,0 +1,75 @@
+<div class="container d-flex justify-content-center align-items-center vh-100">
+  <div class="card shadow-lg p-4" style="width: 100%; max-width: 500px">
+    <h2 class="text-center mb-2">Register</h2>
+    <form class="row g-3" name="form">
+      <!-- First Name -->
+      <div class="">
+        <label for="fname" class="form-label">First Name</label>
+        <input
+          type="text"
+          id="fname"
+          name="fname"
+          class="form-control"
+          placeholder="first name"
+        />
+        <div>
+          <span class="text-danger">Email is Mandatory</span>
+        </div>
+      </div>
+
+      <!-- Last Name -->
+      <div class="">
+        <label for="lname" class="form-label">Last Name</label>
+        <input
+          type="text"
+          id="lname"
+          name="lname"
+          class="form-control"
+          placeholder="last name"
+        />
+        <div>
+          <span class="text-danger">Email is Mandatory</span>
+        </div>
+      </div>
+
+      <!-- Email -->
+      <div class="">
+        <label for="email" class="form-label">Email</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          class="form-control"
+          placeholder="email"
+        />
+        <div>
+          <span class="text-danger">Email is Mandatory</span>
+          <span class="text-danger">Invalid Email</span>
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div class="">
+        <label for="password" class="form-label">Password</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          class="form-control"
+          placeholder="Enter password"
+        />
+        <div>
+          <span class="text-danger">Email is Mandatory</span>
+          <span class="text-danger"
+            >Password must be at least 8 characters</span
+          >
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="d-flex justify-content-end">
+        <button type="submit" class="btn btn-primary">Register</button>
+      </div>
+    </form>
+  </div>
+</div>
