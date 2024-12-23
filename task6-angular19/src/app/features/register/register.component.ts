@@ -9,7 +9,6 @@ import {
 } from '@angular/forms';
 
 import { AuthService } from '../../services/auth.service';
-import { Response } from '../../interface/interface';
 
 @Component({
   selector: 'app-register',
@@ -47,7 +46,7 @@ export class RegisterComponent {
     this.isLoading = true;
     console.log(this.registerForm.value);
     try {
-      const response: Response = await this.authService.registerUser(
+      const response = await this.authService.registerUser(
         this.registerForm.value,
       );
       if (response.success) {
@@ -61,7 +60,6 @@ export class RegisterComponent {
       console.error('Error registering user: ' + error.message);
       this.error = 'Unable to Register User';
     }
-
     this.isLoading = false;
   }
 }
