@@ -2,6 +2,7 @@
   <div class="card shadow-lg p-4" style="width: 100%; max-width: 500px">
     <h2 class="text-center mb-2">Register</h2>
     <form class="row g-3" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
       <!-- First Name -->
       <div class="">
         <label for="fname" class="form-label">First Name</label>
@@ -106,7 +107,13 @@
 
       <!-- Submit Button -->
       <div class="d-flex justify-content-end">
-        <button type="submit" class="btn btn-primary">Register</button>
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="!registerForm.valid || isLoading"
+        >
+          {{ isLoading ? "Loading..." : "Register" }}
+        </button>
       </div>
     </form>
   </div>
