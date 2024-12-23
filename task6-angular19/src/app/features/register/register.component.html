@@ -1,18 +1,23 @@
 <div class="container d-flex justify-content-center align-items-center vh-100">
   <div class="card shadow-lg p-4" style="width: 100%; max-width: 500px">
     <h2 class="text-center mb-2">Register</h2>
-    <form class="row g-3" name="form">
+    <form class="row g-3" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
       <!-- First Name -->
       <div class="">
         <label for="fname" class="form-label">First Name</label>
         <input
           type="text"
           id="fname"
-          name="fname"
           class="form-control"
           placeholder="first name"
+          formControlName="firstName"
         />
-        <div>
+        <div
+          *ngIf="
+            registerForm.get('firstName')?.invalid &&
+            registerForm.get('firstName')?.touched
+          "
+        >
           <span class="text-danger">Email is Mandatory</span>
         </div>
       </div>
@@ -23,12 +28,19 @@
         <input
           type="text"
           id="lname"
-          name="lname"
           class="form-control"
           placeholder="last name"
+          formControlName="lastName"
         />
         <div>
-          <span class="text-danger">Email is Mandatory</span>
+          <span
+            *ngIf="
+              registerForm.get('lastName')?.invalid &&
+              registerForm.get('lastName')?.touched
+            "
+            class="text-danger"
+            >Email is Mandatory</span
+          >
         </div>
       </div>
 
@@ -38,13 +50,27 @@
         <input
           type="email"
           id="email"
-          name="email"
           class="form-control"
           placeholder="email"
+          formControlName="email"
         />
         <div>
-          <span class="text-danger">Email is Mandatory</span>
-          <span class="text-danger">Invalid Email</span>
+          <span
+            *ngIf="
+              registerForm.get('email')?.errors?.['required'] &&
+              registerForm.get('email')?.touched
+            "
+            class="text-danger"
+            >Email is Mandatory</span
+          >
+          <span
+            *ngIf="
+              registerForm.get('email')?.errors?.['email'] &&
+              registerForm.get('email')?.touched
+            "
+            class="text-danger"
+            >Invalid Email</span
+          >
         </div>
       </div>
 
@@ -54,13 +80,25 @@
         <input
           type="password"
           id="password"
-          name="password"
           class="form-control"
           placeholder="Enter password"
+          formControlName="password"
         />
         <div>
-          <span class="text-danger">Email is Mandatory</span>
-          <span class="text-danger"
+          <span
+            *ngIf="
+              registerForm.get('password')?.errors?.['required'] &&
+              registerForm.get('password')?.touched
+            "
+            class="text-danger"
+            >Email is Mandatory</span
+          >
+          <span
+            *ngIf="
+              registerForm.get('password')?.errors?.['minlength'] &&
+              registerForm.get('password')?.touched
+            "
+            class="text-danger"
             >Password must be at least 8 characters</span
           >
         </div>
