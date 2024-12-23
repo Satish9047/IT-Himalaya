@@ -1,1 +1,44 @@
-<p>todo-tasks works!</p>
+<!-- Todo Task -->
+<div>
+  <h3 class="fs-4">ToDo Task</h3>
+  <ol class="list-group" style="min-height: 200px">
+    <div class="text-center">
+      <p>empty task</p>
+    </div>
+    <!-- list of todo task -->
+    <li
+      class="list-group-item bg-warning-subtle shadow mb-3 rounded d-flex gap-2"
+    >
+      <figure>
+        <img
+          src="/public/images/todo.png"
+          alt="task image"
+          class="img-fluid"
+          style="width: 80px; height: 80px"
+        />
+      </figure>
+      <div class="w-100">
+        <p class="fs-5">{{ "Run 10Km" }}</p>
+        <div
+          class="taskDetails d-flex flex-column flex-md-row justify-content-between lh-1"
+        >
+          <div>
+            <div
+              class="info d-flex flex-column flex-md-row text-light-emphasis gap-md-3"
+            >
+              <p class="pb-md-0">createdAt: {{ "2024" }}</p>
+              <p class="pb-md-0">Due: {{ "2025" }}</p>
+            </div>
+          </div>
+          <div>
+            <!-- submit button -->
+            <button class="btn btn-warning shadow">Delete</button>
+
+            <!-- completed button -->
+            <button class="btn btn-primary shadow">Completed</button>
+          </div>
+        </div>
+      </div>
+    </li>
+  </ol>
+</div>
