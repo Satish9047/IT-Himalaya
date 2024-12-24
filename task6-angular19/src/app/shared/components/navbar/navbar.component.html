@@ -9,7 +9,7 @@
     <div *ngIf="user()" class="d-flex align-items-center gap-2">
       <p>
         {{ user()?.email }}
-        <button class="btn btn-primary">Logout</button>
+        <button class="btn btn-primary" (click)="logout()">Logout</button>
       </p>
     </div>
   </div>

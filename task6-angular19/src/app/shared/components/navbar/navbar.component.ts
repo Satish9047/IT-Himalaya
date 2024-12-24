@@ -1,4 +1,4 @@
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Component, Signal } from '@angular/core';
 
@@ -14,11 +14,15 @@ import { UserService } from '../../../services/user.service';
 export class NavbarComponent {
   user: Signal<User | null>;
 
-  constructor(private userService: UserService) {
+  constructor(
+    private userService: UserService,
+    private router: Router,
+  ) {
     this.user = this.userService.user;
   }
 
   logout() {
     this.userService.clearUser();
+    this.router.navigate(['/login']);
   }
 }
