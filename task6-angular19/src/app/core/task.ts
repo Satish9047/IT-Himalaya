@@ -1,21 +1,21 @@
-import { get } from 'http';
-import { getFormattedDate } from '../utils/date';
+import { getFormattedDate, getDueDate } from '../utils/date';
 
 export class Task {
-  id?: string;
+  id: string;
   description: string;
   completed: boolean;
   createdAt: string;
   dueDate: string;
-  completedAt: string;
+  completedAt: string | null;
   userId?: string;
 
-  constructor(description: string, dueDate: string) {
+  constructor(id: string, description: string) {
+    this.id = id;
     this.description = description;
-    this.dueDate = dueDate;
     this.completed = false;
+    this.dueDate = getDueDate();
     this.createdAt = getFormattedDate();
-    this.completedAt = '';
+    this.completedAt = null;
   }
 
   MaskTaskToComplete() {
