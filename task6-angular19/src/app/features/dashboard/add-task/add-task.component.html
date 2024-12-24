@@ -1,11 +1,13 @@
 <!-- Add Task -->
 <form
   name="addTaskForm"
+  [formGroup]="addTaskForm"
   class="d-flex flex-row justify-content-center gap-3 mb-3"
+  (ngSubmit)="addTask()"
 >
   <input
     type="text"
-    id="taskDescription"
+    formControlName="taskDescription"
     placeholder="Enter Task Description"
     class="form-control w-md-50 fs-5 shadow"
   />
