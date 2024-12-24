@@ -14,6 +14,7 @@ export class TodoTasksComponent {
   tasks: Signal<Task[]>;
   todoTasks: Signal<Task[]>;
   constructor(private taskService: TaskService) {
+    this.taskService.loadTasks();
     this.tasks = this.taskService.tasks;
 
     this.todoTasks = computed(() =>

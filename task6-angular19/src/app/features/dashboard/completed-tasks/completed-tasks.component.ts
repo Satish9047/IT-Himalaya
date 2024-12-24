@@ -14,6 +14,7 @@ export class CompletedTasksComponent {
   tasks: Signal<Task[]>;
   completedTasks: Signal<Task[]>;
   constructor(private taskService: TaskService) {
+    this.taskService.loadTasks();
     this.tasks = this.taskService.tasks;
 
     this.completedTasks = computed(() => {
