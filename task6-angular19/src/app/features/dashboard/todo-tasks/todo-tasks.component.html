@@ -2,11 +2,12 @@
 <div>
   <h3 class="fs-4">ToDo Task</h3>
   <ol class="list-group" style="min-height: 200px">
-    <div class="text-center">
+    <div class="text-center" *ngIf="todoTasks().length === 0">
       <p>empty task</p>
     </div>
     <!-- list of todo task -->
     <li
+      *ngFor="let task of todoTasks()"
       class="list-group-item bg-warning-subtle shadow mb-3 rounded d-flex gap-2"
     >
       <figure>
@@ -18,7 +19,7 @@
         />
       </figure>
       <div class="w-100">
-        <p class="fs-5">{{ "Run 10Km" }}</p>
+        <p class="fs-5">{{ task.description }}</p>
         <div
           class="taskDetails d-flex flex-column flex-md-row justify-content-between lh-1"
         >
@@ -26,16 +27,25 @@
             <div
               class="info d-flex flex-column flex-md-row text-light-emphasis gap-md-3"
             >
-              <p class="pb-md-0">createdAt: {{ "2024" }}</p>
-              <p class="pb-md-0">Due: {{ "2025" }}</p>
+              <p class="pb-md-0">createdAt: {{ task.createdAt }}</p>
+              <p class="pb-md-0">Due: {{ task.dueDate }}</p>
             </div>
           </div>
           <div>
             <!-- submit button -->
-            <button class="btn btn-warning shadow">Delete</button>
-
+            <button
+              class="btn btn-warning shadow"
+              (click)="deleteTask(task.id)"
+            >
+              Delete
+            </button>
             <!-- completed button -->
-            <button class="btn btn-primary shadow">Completed</button>
+            <button
+              class="btn btn-primary shadow"
+              (click)="completedTask(task.id)"
+            >
+              Completed
+            </button>
           </div>
         </div>
       </div>
