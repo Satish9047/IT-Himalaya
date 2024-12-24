@@ -11,20 +11,6 @@ export interface LoginData {
   password: string;
 }
 
-export interface Task {
-  id?: string;
-  description: string;
-  completed: boolean;
-  createdAt: string;
-  dueDate: string;
-  completedAt: string;
-  userId?: string;
-}
-
-export interface Tasks {
-  tasks: Task[];
-}
-
 export interface Response<T> {
   success: boolean;
   message: string;
