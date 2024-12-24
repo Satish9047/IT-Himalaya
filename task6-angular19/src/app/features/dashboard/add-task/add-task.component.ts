@@ -8,6 +8,7 @@ import {
 
 import { TaskService } from '../../../services/task.service';
 import { Task } from '../../../core/task';
+import { getDueDate, getFormattedDate } from '../../../utils/date';
 
 @Component({
   selector: 'app-add-task',
@@ -29,7 +30,14 @@ export class AddTaskComponent {
     console.log(this.addTaskForm.value);
     //add new task
     const taskId = Date.now().toString();
-    const newTask = new Task(taskId, this.addTaskForm.value.taskDescription);
+    const createdAt = getFormattedDate();
+    const dueDate = getDueDate();
+    const newTask = new Task(
+      taskId,
+      this.addTaskForm.value.taskDescription,
+      createdAt,
+      dueDate,
+    );
     this.taskService.addTask(newTask);
 
     this.addTaskForm.reset();
