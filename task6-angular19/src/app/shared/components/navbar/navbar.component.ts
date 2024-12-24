@@ -1,6 +1,6 @@
+import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Component, Signal } from '@angular/core';
 
 import { User } from '../../../interface/interface';
 import { UserService } from '../../../services/user.service';
@@ -11,11 +11,14 @@ import { UserService } from '../../../services/user.service';
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css',
 })
-export class NavbarComponent implements OnInit {
-  user: User | null = null;
-  constructor(private userService: UserService) {}
+export class NavbarComponent {
+  user: Signal<User | null>;
 
-  ngOnInit() {
-    this.userService.getUser();
+  constructor(private userService: UserService) {
+    this.user = this.userService.user;
+  }
+
+  logout() {
+    this.userService.clearUser();
   }
 }
