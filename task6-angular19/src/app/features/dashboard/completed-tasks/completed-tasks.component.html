@@ -2,11 +2,14 @@
 <div>
   <h3 class="fs-4">Completed Task</h3>
   <ol id="completedList" class="list-group" style="min-height: 200px">
-    <div class="text-center">
+    <div class="text-center" *ngIf="completedTasks().length === 0">
       <p>no task completed</p>
     </div>
     <!-- list of completed task -->
-    <li class="list-group-item bg-dark-subtle shadow mb-3 rounded d-flex gap-2">
+    <li
+      *ngFor="let task of completedTasks()"
+      class="list-group-item bg-dark-subtle shadow mb-3 rounded d-flex gap-2"
+    >
       <figure>
         <img
           src="/images/check.png"
@@ -16,20 +19,25 @@
         />
       </figure>
       <div class="w-100">
-        <p class="fs-5">{{ "Run fast" }}</p>
+        <p class="fs-5">{{ task.description }}</p>
         <div class="d-flex flex-column flex-md-row justify-content-between">
           <div class="">
             <div
               class="info d-flex flex-column flex-md-row text-light-emphasis gap-md-3"
             >
-              <p>CreatedAt:{{ "2024" }}</p>
-              <p>Due:{{ "2025" }}</p>
-              <p>CompletedAt:{{ "2025" }}</p>
+              <p>CreatedAt:{{ task.createdAt }}</p>
+              <p>Due:{{ task.dueDate }}</p>
+              <p>CompletedAt:{{ task.completedAt }}</p>
             </div>
           </div>
           <div class="d-flex flex-row justify-content-end">
             <!-- submit button -->
-            <button class="btn btn-warning shadow">Delete</button>
+            <button
+              class="btn btn-warning shadow"
+              (click)="deleteCompletedTask(task.id)"
+            >
+              Delete
+            </button>
           </div>
         </div>
       </div>
