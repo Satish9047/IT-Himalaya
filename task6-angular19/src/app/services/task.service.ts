@@ -1,4 +1,10 @@
-import { Injectable, Signal, signal, WritableSignal } from '@angular/core';
+import {
+  effect,
+  Injectable,
+  Signal,
+  signal,
+  WritableSignal,
+} from '@angular/core';
 import { Task } from '../core/task';
 import { LocalforageService } from './localforage.service';
 import { UserService } from './user.service';
@@ -11,14 +17,18 @@ export class TaskService {
   private _tasks: WritableSignal<Task[]> = signal([]);
   readonly tasks = this._tasks.asReadonly();
   user: Signal<User | null>;
-  currentUser: User | null;
+  currentUser!: User | null;
 
   constructor(
     private localforageService: LocalforageService,
     private userService: UserService,
   ) {
     this.user = this.userService.user;
-    this.currentUser = this.user();
+    // this.currentUser = this.user();
+    effect(() => {
+      this.currentUser = this.user();
+      console.log('Current User:', this.currentUser);
+    });
   }
 
   async loadTasks(): Promise<Task[]> {
@@ -32,7 +42,7 @@ export class TaskService {
       const tasks = await storeInstance.getItem<Task[]>('tasks');
       if (tasks) {
         const taskLoad: Task[] = [];
-        const loadedTasks = tasks.map((task) => {
+        tasks.forEach((task) => {
           const newTask = new Task(
             task.id,
             task.description,
@@ -126,5 +136,9 @@ export class TaskService {
       console.error('Error deleting tasks in localforage', error);
       return false;
     }
+  }
+
+  clearTasks() {
+    this._tasks.set([]);
   }
 }
