@@ -25,5 +25,7 @@ export class UserService {
 
   clearUser() {
     this._user.set(null);
+    const storeInstance = this.localforageService.getLoggedUserStoreInstance();
+    storeInstance.clear();
   }
 }
