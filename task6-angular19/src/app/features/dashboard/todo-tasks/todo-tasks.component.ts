@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, Signal } from '@angular/core';
+import { Component, computed, OnInit, Signal } from '@angular/core';
 
 import { Task } from '../../../core/task';
 import { TaskService } from '../../../services/task.service';
@@ -10,7 +10,7 @@ import { TaskService } from '../../../services/task.service';
   templateUrl: './todo-tasks.component.html',
   styleUrl: './todo-tasks.component.css',
 })
-export class TodoTasksComponent {
+export class TodoTasksComponent implements OnInit {
   tasks: Signal<Task[]>;
   todoTasks: Signal<Task[]>;
   constructor(private taskService: TaskService) {
@@ -20,6 +20,11 @@ export class TodoTasksComponent {
     this.todoTasks = computed(() =>
       this.tasks().filter((task) => !task.completed),
     );
+  }
+
+  ngOnInit(): void {
+    // Load tasks initially
+    this.taskService.loadTasks();
   }
 
   deleteTask(taskId: string): void {
