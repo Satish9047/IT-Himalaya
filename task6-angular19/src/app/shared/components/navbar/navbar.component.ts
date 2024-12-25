@@ -4,6 +4,7 @@ import { Component, Signal } from '@angular/core';
 
 import { User } from '../../../interface/interface';
 import { UserService } from '../../../services/user.service';
+import { TaskService } from '../../../services/task.service';
 
 @Component({
   selector: 'app-navbar',
@@ -16,6 +17,7 @@ export class NavbarComponent {
 
   constructor(
     private userService: UserService,
+    private taskService: TaskService,
     private router: Router,
   ) {
     this.user = this.userService.user;
@@ -23,6 +25,7 @@ export class NavbarComponent {
 
   logout() {
     this.userService.clearUser();
+    this.taskService.clearTasks();
     this.router.navigate(['/login']);
   }
 }
