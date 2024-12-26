@@ -1,6 +1,7 @@
+import { Injectable } from '@angular/core';
+
 import { UserService } from './user.service';
 import { LocalforageService } from './localforage.service';
-import { Injectable } from '@angular/core';
 import { LoginData, Response, User } from '../interface/interface';
 
 @Injectable({
@@ -17,12 +18,20 @@ export class AuthService {
   async registerUser(user: User): Promise<Response<User>> {
     const storeInstance = this.localforageService.getStoreInstance(user);
     try {
-      await storeInstance.setItem('userData', user);
-      return {
-        success: true,
-        message: 'User saved to localForage.',
-        data: null,
-      };
+      const res = await storeInstance.setItem('userData', user);
+      if (res) {
+        return {
+          success: true,
+          message: 'User saved to localForage.',
+          data: null,
+        };
+      } else {
+        return {
+          success: false,
+          message: 'User not saved to localForage.',
+          data: null,
+        };
+      }
     } catch (error: any) {
       return { success: false, message: error.message, data: null };
     }
