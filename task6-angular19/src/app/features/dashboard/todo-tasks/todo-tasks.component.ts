@@ -13,24 +13,24 @@ import { TaskService } from '../../../services/task.service';
 export class TodoTasksComponent implements OnInit {
   tasks: Signal<Task[]>;
   todoTasks: Signal<Task[]>;
-  constructor(private taskService: TaskService) {
-    this.taskService.loadTasks();
-    this.tasks = this.taskService.tasks;
 
+  constructor(private taskService: TaskService) {
+    this.tasks = this.taskService.tasks;
     this.todoTasks = computed(() =>
       this.tasks().filter((task) => !task.completed),
     );
   }
 
+  //On Initialization
   ngOnInit(): void {
-    // Load tasks initially
     this.taskService.loadTasks();
   }
 
+  //Delete Method
   deleteTask(taskId: string): void {
     this.taskService.deleteTask(taskId);
   }
-
+  //Completed Method
   completedTask(taskId: string): void {
     this.taskService.markTaskAsCompleted(taskId);
   }
