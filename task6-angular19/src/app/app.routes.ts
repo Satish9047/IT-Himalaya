@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 
 import { AuthGuard } from './guard/auth.guard';
+import { PassGuard } from './guard/pass.guard';
 
 export const routes: Routes = [
   {
@@ -8,6 +9,7 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/login/login.component').then((m) => m.LoginComponent),
     title: 'Login',
+    canActivate: [PassGuard],
   },
   {
     path: 'register',
@@ -16,6 +18,7 @@ export const routes: Routes = [
         (m) => m.RegisterComponent,
       ),
     title: 'Register',
+    canActivate: [PassGuard],
   },
   {
     path: 'dashboard',
