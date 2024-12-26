@@ -19,6 +19,7 @@ import { getDueDate, getFormattedDate } from '../../../utils/date';
 export class AddTaskComponent {
   constructor(private taskService: TaskService) {}
 
+  //Form
   addTaskForm: FormGroup = new FormGroup({
     taskDescription: new FormControl('', [
       Validators.required,
@@ -26,9 +27,8 @@ export class AddTaskComponent {
     ]),
   });
 
+  //Add Task
   addTask() {
-    console.log(this.addTaskForm.value);
-    //add new task
     const taskId = Date.now().toString();
     const createdAt = getFormattedDate();
     const dueDate = getDueDate();
@@ -39,7 +39,6 @@ export class AddTaskComponent {
       dueDate,
     );
     this.taskService.addTask(newTask);
-
     this.addTaskForm.reset();
   }
 }
