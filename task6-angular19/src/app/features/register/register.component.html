@@ -1,7 +1,7 @@
 <div class="container d-flex justify-content-center align-items-center vh-100">
   <div class="card shadow-lg p-4" style="width: 100%; max-width: 500px">
     <h2 class="text-center mb-2">Register</h2>
-    <form class="row g-3" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+    <form class="row g-3" [formGroup]="registerForm" (ngSubmit)="register()">
       <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
       <!-- First Name -->
       <div class="">
