@@ -27,6 +27,7 @@ export class LoginComponent {
     private userService: UserService,
   ) {}
 
+  //Form
   loginForm: FormGroup = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [
@@ -35,7 +36,7 @@ export class LoginComponent {
     ]),
   });
 
-  async onSubmit() {
+  async login() {
     this.isLoading = true;
     console.log(this.loginForm.value);
     try {

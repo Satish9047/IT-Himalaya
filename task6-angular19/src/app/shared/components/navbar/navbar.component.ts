@@ -23,6 +23,7 @@ export class NavbarComponent {
     this.user = this.userService.user;
   }
 
+  //Logout Method
   logout() {
     this.userService.clearUser();
     this.taskService.clearTasks();

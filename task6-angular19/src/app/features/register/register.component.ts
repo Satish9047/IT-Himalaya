@@ -25,6 +25,7 @@ export class RegisterComponent {
     private authService: AuthService,
   ) {}
 
+  //Form
   registerForm: FormGroup = new FormGroup({
     firstName: new FormControl('', [
       Validators.required,
@@ -42,7 +43,7 @@ export class RegisterComponent {
   });
 
   //Register Method
-  async onSubmit() {
+  async register() {
     this.isLoading = true;
     console.log(this.registerForm.value);
     try {
