@@ -24,10 +24,8 @@ export class TaskService {
     private userService: UserService,
   ) {
     this.user = this.userService.user;
-    // this.currentUser = this.user();
     effect(() => {
       this.currentUser = this.user();
-      console.log('Current User:', this.currentUser);
     });
   }
 
