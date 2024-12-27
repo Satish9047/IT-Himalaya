@@ -38,7 +38,7 @@ export class LoginComponent {
 
   async login() {
     this.isLoading = true;
-    console.log(this.loginForm.value);
+    console.log(this.loginForm);
     try {
       const response = await this.authService.loginUser(this.loginForm.value);
       if (response.success && response.data) {
