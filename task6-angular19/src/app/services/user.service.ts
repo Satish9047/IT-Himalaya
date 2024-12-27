@@ -12,11 +12,16 @@ export class UserService {
   readonly user = this._user.asReadonly();
 
   constructor(private localforageService: LocalforageService) {
-    this.localforageService.getLoggedUser().then((user) => {
-      if (user) {
-        this.setUser(user);
-      }
-    });
+    this.localforageService
+      .initialize()
+      .then((user) => {
+        this._user.set(user);
+        console.log('User loaded from LocalForage:userService:', user);
+      })
+      .catch((error) => {
+        console.error('Error loading user:', error);
+        this._user.set(null);
+      });
   }
 
   setUser(user: User) {
