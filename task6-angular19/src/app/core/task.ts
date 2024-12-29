@@ -1,22 +1,22 @@
-import { getFormattedDate, getDueDate } from '../utils/date';
+import { getFormattedDate } from '../utils/date';
 
 export class Task {
-  id?: string | number;
+  id?: string;
   description: string;
   createdAt: string;
   dueDate: string;
   completed: boolean;
   completedAt: string | null;
-  userId: string | number;
+  userId: string;
 
   constructor(
-    userId: string | number,
+    userId: string,
     description: string,
     createdAt: string,
     dueDate: string,
     completed = false,
     completedAt: string | null = null,
-    id: string | number | undefined = undefined,
+    id: string | undefined = undefined,
   ) {
     this.userId = userId;
     this.description = description;
