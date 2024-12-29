@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { UserService } from './../../../services/user.service';
+import { Component, Signal } from '@angular/core';
 import {
   FormGroup,
   FormControl,
@@ -9,6 +10,7 @@ import {
 import { TaskService } from '../../../services/task.service';
 import { Task } from '../../../core/task';
 import { getDueDate, getFormattedDate } from '../../../utils/date';
+import { User } from '../../../interface/interface';
 
 @Component({
   selector: 'app-add-task',
@@ -17,11 +19,17 @@ import { getDueDate, getFormattedDate } from '../../../utils/date';
   styleUrl: './add-task.component.css',
 })
 export class AddTaskComponent {
-  constructor(private taskService: TaskService) {}
+  user!: Signal<User | null>;
+  constructor(
+    private taskService: TaskService,
+    private userService: UserService,
+  ) {
+    this.user = this.userService.user;
+  }
 
   //Form
   addTaskForm: FormGroup = new FormGroup({
-    taskDescription: new FormControl('', [
+    description: new FormControl('', [
       Validators.required,
       Validators.minLength(2),
     ]),
@@ -29,16 +37,20 @@ export class AddTaskComponent {
 
   //Add Task
   addTask() {
-    const taskId = Date.now().toString();
-    const createdAt = getFormattedDate();
-    const dueDate = getDueDate();
-    const newTask = new Task(
-      taskId,
-      this.addTaskForm.value.taskDescription,
-      createdAt,
-      dueDate,
-    );
-    this.taskService.addTask(newTask);
+    if (this.userService.user()?.id) {
+      const userId = this.user()?.id;
+      if (userId) {
+        const createdAt = getFormattedDate();
+        const dueDate = getDueDate();
+        const newTask = new Task(
+          userId,
+          this.addTaskForm.value.description,
+          createdAt,
+          dueDate,
+        );
+        this.taskService.addTask(newTask);
+      }
+    }
     this.addTaskForm.reset();
   }
 }
