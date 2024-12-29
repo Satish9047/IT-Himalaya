@@ -1,6 +1,9 @@
 <div class="container d-flex justify-content-center align-items-center vh-100">
   <div class="card shadow-lg p-4" style="width: 100%; max-width: 500px">
     <h2 class="text-center mb-2">Login</h2>
+    <div *ngIf="error" class="alert alert-danger">
+      {{ error }}
+    </div>
     <!-- Form -->
     <form
       name="form"
