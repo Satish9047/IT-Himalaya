@@ -20,11 +20,11 @@ export class AuthGuard implements CanActivate {
     private router: Router,
   ) {}
 
-  async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
     if (this.userService.user()) {
       return true;
     } else {
-      const res = await this.authService.autoLogin();
+      const res = this.authService.autoLogin();
       if (res) {
         return true;
       } else {
