@@ -1,7 +1,7 @@
-import { DexieService } from './dexie.service';
 import { Injectable } from '@angular/core';
+
+import { DexieService } from './dexie.service';
 import { LoginData, User } from '../interface/interface';
-import Dexie, { Table } from 'dexie';
 
 @Injectable({
   providedIn: 'root',

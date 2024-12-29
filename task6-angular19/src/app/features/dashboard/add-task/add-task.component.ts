@@ -1,4 +1,3 @@
-import { UserService } from './../../../services/user.service';
 import { Component, Signal } from '@angular/core';
 import {
   FormGroup,
@@ -7,10 +6,11 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 
-import { TaskService } from '../../../services/task.service';
 import { Task } from '../../../core/task';
-import { getDueDate, getFormattedDate } from '../../../utils/date';
 import { User } from '../../../interface/interface';
+import { TaskService } from '../../../services/task.service';
+import { UserService } from './../../../services/user.service';
+import { getDueDate, getFormattedDate } from '../../../utils/date';
 
 @Component({
   selector: 'app-add-task',
@@ -37,19 +37,17 @@ export class AddTaskComponent {
 
   //Add Task
   addTask() {
-    if (this.userService.user()?.id) {
-      const userId = this.user()?.id;
-      if (userId) {
-        const createdAt = getFormattedDate();
-        const dueDate = getDueDate();
-        const newTask = new Task(
-          userId,
-          this.addTaskForm.value.description,
-          createdAt,
-          dueDate,
-        );
-        this.taskService.addTask(newTask);
-      }
+    const userId = this.user()?.id;
+    if (userId) {
+      const createdAt = getFormattedDate();
+      const dueDate = getDueDate();
+      const newTask = new Task(
+        userId,
+        this.addTaskForm.value.description,
+        createdAt,
+        dueDate,
+      );
+      this.taskService.addTask(newTask);
     }
     this.addTaskForm.reset();
   }

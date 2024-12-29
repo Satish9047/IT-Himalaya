@@ -1,6 +1,6 @@
+import { Router } from '@angular/router';
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
 import {
   FormGroup,
   FormControl,
@@ -45,16 +45,13 @@ export class RegisterComponent {
   //Register Method
   async register() {
     this.isLoading = true;
-    console.log(this.registerForm.value);
     try {
       const response = await this.authService.registerUser(
         this.registerForm.value,
       );
-      if (response.success) {
-        console.log(response.message);
+      if (response.success && response.data) {
         this.router.navigate(['/login']);
       } else {
-        console.log(response.message);
         this.error = response.message;
       }
     } catch (error: any) {

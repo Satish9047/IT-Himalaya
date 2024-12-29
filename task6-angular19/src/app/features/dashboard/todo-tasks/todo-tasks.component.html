@@ -36,14 +36,14 @@
             <!-- submit button -->
             <button
               class="btn btn-warning shadow"
-              (click)="deleteTask(task.id)"
+              (click)="deleteTask(task.id!)"
             >
               Delete
             </button>
             <!-- completed button -->
             <button
               class="btn btn-primary shadow"
-              (click)="completedTask(task.id)"
+              (click)="completedTask(task.id!)"
             >
               Completed
             </button>

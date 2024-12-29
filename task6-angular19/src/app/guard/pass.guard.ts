@@ -1,8 +1,8 @@
-import { Injectable, Signal, computed, effect } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
+import { Injectable, Signal, effect } from '@angular/core';
 
-import { UserService } from '../services/user.service';
 import { User } from '../interface/interface';
+import { UserService } from '../services/user.service';
 
 @Injectable({
   providedIn: 'root',

@@ -17,16 +17,6 @@ export class UserService {
       const userObject = JSON.parse(user);
       this._user.set(userObject);
     }
-    // this.localforageService
-    //   .initialize()
-    //   .then((user) => {
-    //     this._user.set(user);
-    //     console.log('User loaded from LocalForage:userService:', user);
-    //   })
-    //   .catch((error) => {
-    //     console.error('Error loading user:', error);
-    //     this._user.set(null);
-    //   });
   }
 
   setUser(user: User) {

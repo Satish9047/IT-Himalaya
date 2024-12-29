@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 
 import { UserService } from './user.service';
-import { LoginData, Response, User } from '../interface/interface';
 import { DexieUserService } from './dexie-user.service';
+import { LoginData, Response, User } from '../interface/interface';
 
 @Injectable({
   providedIn: 'root',
@@ -15,6 +15,7 @@ export class AuthService {
     this.autoLogin();
   }
 
+  //Register Method
   async registerUser(user: User): Promise<Response<User>> {
     try {
       const res = await this.dexieUserService.AddUser(user);
@@ -22,7 +23,7 @@ export class AuthService {
         return {
           success: true,
           message: 'User saved to indexedDB.',
-          data: null,
+          data: user,
         };
       } else {
         return {
@@ -41,6 +42,7 @@ export class AuthService {
     }
   }
 
+  //Login Method
   async loginUser(userData: LoginData): Promise<Response<User>> {
     try {
       const res = await this.dexieUserService.getUserByEmail(userData);
@@ -77,6 +79,7 @@ export class AuthService {
     }
   }
 
+  //AutoLogin Method
   autoLogin(): User | null {
     try {
       const loggedUser = localStorage.getItem('LoggedUser');

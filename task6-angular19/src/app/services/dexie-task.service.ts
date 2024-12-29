@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-import Dexie, { Table } from 'dexie';
+
 import { Task } from '../core/task';
-import { User } from '../interface/interface';
-import { getFormattedDate } from '../utils/date';
 import { DexieService } from './dexie.service';
+import { getFormattedDate } from '../utils/date';
 
 @Injectable({
   providedIn: 'root',
@@ -11,10 +10,8 @@ import { DexieService } from './dexie.service';
 export class DexieTaskService {
   constructor(private dexieService: DexieService) {}
 
-  // Add a task
   async addTask(task: Task): Promise<void> {
-    const res = await this.dexieService.taskTable.add(task);
-    console.log('addTask in Dexie', res);
+    await this.dexieService.taskTable.add(task);
   }
 
   async deleteTask(taskId: string, userId: string): Promise<void> {
@@ -24,7 +21,6 @@ export class DexieTaskService {
   }
 
   async updateTaskToCompleted(task: Task, userId: string): Promise<void> {
-    console.log('updateTaskToCompleted in Dexie', task);
     await this.dexieService.taskTable
       .where({ id: task.id, userId: userId })
       .modify({
@@ -33,7 +29,7 @@ export class DexieTaskService {
       });
   }
 
-  async getUserTasks(userId: string | number): Promise<Task[]> {
+  async getUserTasks(userId: string): Promise<Task[]> {
     return await this.dexieService.taskTable
       .where({ userId: userId })
       .toArray();

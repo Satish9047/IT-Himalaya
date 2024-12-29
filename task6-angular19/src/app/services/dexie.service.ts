@@ -1,5 +1,6 @@
-import { Injectable } from '@angular/core';
 import Dexie, { Table } from 'dexie';
+import { Injectable } from '@angular/core';
+
 import { Task } from '../core/task';
 import { User } from '../interface/interface';
 
@@ -12,7 +13,6 @@ export class DexieService extends Dexie {
 
   constructor() {
     super('TaskDB'); // Database name
-
     this.version(1).stores({
       tasksTable:
         '++id, description, createdAt, dueDate, completed, completedAt, userId',

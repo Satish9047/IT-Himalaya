@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   FormGroup,
@@ -44,7 +44,6 @@ export class LoginComponent {
         this.userService.setUser(response.data);
         this.router.navigate(['/dashboard']);
       } else {
-        console.log(response.message);
         this.error = response.message;
       }
     } catch (error: any) {
