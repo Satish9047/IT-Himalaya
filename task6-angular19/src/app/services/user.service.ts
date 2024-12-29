@@ -12,16 +12,21 @@ export class UserService {
   readonly user = this._user.asReadonly();
 
   constructor(private localforageService: LocalforageService) {
-    this.localforageService
-      .initialize()
-      .then((user) => {
-        this._user.set(user);
-        console.log('User loaded from LocalForage:userService:', user);
-      })
-      .catch((error) => {
-        console.error('Error loading user:', error);
-        this._user.set(null);
-      });
+    const user = localStorage.getItem('LoggedUser');
+    if (user) {
+      const userObject = JSON.parse(user);
+      this._user.set(userObject);
+    }
+    // this.localforageService
+    //   .initialize()
+    //   .then((user) => {
+    //     this._user.set(user);
+    //     console.log('User loaded from LocalForage:userService:', user);
+    //   })
+    //   .catch((error) => {
+    //     console.error('Error loading user:', error);
+    //     this._user.set(null);
+    //   });
   }
 
   setUser(user: User) {
@@ -30,7 +35,6 @@ export class UserService {
 
   clearUser() {
     this._user.set(null);
-    const storeInstance = this.localforageService.getLoggedUserStoreInstance();
-    storeInstance.clear();
+    localStorage.removeItem('LoggedUser');
   }
 }
