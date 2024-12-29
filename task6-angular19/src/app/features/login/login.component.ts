@@ -38,13 +38,11 @@ export class LoginComponent {
 
   async login() {
     this.isLoading = true;
-    console.log(this.loginForm);
     try {
       const response = await this.authService.loginUser(this.loginForm.value);
       if (response.success && response.data) {
-        console.log(response.message);
-        this.router.navigate(['/dashboard']);
         this.userService.setUser(response.data);
+        this.router.navigate(['/dashboard']);
       } else {
         console.log(response.message);
         this.error = response.message;
