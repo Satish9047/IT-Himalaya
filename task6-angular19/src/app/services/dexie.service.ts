@@ -15,7 +15,7 @@ export class DexieService extends Dexie {
     super('TaskDB'); // Database name
     this.version(1).stores({
       tasksTable:
-        '++id, description, createdAt, dueDate, completed, completedAt, userId',
+        '++id, description, createdAt, dueDate, completed, completedAt, userId, [id+userId]',
       userTable: '++id, firstName, lastName, email, password',
     });
 
