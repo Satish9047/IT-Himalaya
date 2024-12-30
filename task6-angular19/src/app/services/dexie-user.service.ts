@@ -25,8 +25,8 @@ export class DexieUserService {
         .where({ email: user.email })
         .first();
       if (res) {
-        const resWithOutPassword = { ...res, password: undefined };
-        return resWithOutPassword;
+        // const resWithOutPassword = { ...res, password: undefined };
+        return res;
       }
       return null;
     } catch (error) {

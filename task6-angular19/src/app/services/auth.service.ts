@@ -28,7 +28,7 @@ export class AuthService {
       } else {
         return {
           success: false,
-          message: 'Fail to save localForage.',
+          message: 'Fail to register user.',
           data: null,
         };
       }
@@ -36,7 +36,7 @@ export class AuthService {
       console.log('error while registering');
       return {
         success: false,
-        message: 'Fail to save localForage.',
+        message: 'Fail to register user.',
         data: null,
       };
     }
@@ -48,8 +48,12 @@ export class AuthService {
       const res = await this.dexieUserService.getUserByEmail(userData);
       if (res) {
         if (userData.password === res.password) {
-          this.userService.setUser(res);
-          localStorage.setItem('LoggedUser', JSON.stringify(res));
+          const userWithoutPassword = { ...res, password: undefined };
+          this.userService.setUser(userWithoutPassword);
+          localStorage.setItem(
+            'LoggedUser',
+            JSON.stringify(userWithoutPassword),
+          );
           return {
             success: true,
             message: 'Login Successful',
