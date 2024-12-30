@@ -94,7 +94,7 @@ export class TaskService {
         this.currentUser.id,
       );
     } catch (error) {
-      console.log('Error deleting tasks in localforage', error);
+      console.log('Error deleting tasks', error);
     }
   }
 
