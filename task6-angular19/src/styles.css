@@ -1,9 +1,4 @@
 /* You can add global styles to this file, and also import other style files */
-h2:hover,
-p:hover,
-label:hover {
-  cursor: pointer;
-}
 input.ng-invalid.ng-touched {
   border: 1px solid red;
 }
