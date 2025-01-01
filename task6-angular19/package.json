@@ -25,7 +25,9 @@
     "bcryptjs": "^2.4.3",
     "bootstrap": "^5.3.3",
     "dexie": "^4.0.10",
+    "idb": "^8.0.1",
     "rxjs": "~7.8.0",
+    "sql.js": "^1.12.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"
   },
@@ -36,6 +38,7 @@
     "@capacitor/cli": "^6.2.0",
     "@types/bcryptjs": "^2.4.6",
     "@types/jasmine": "~5.1.0",
+    "@types/sql.js": "^1.4.9",
     "jasmine-core": "~5.4.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
