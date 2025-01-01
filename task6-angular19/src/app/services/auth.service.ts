@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { UserService } from './user.service';
 import { DexieUserService } from './dexie-user.service';
 import { LoginData, Response, User } from '../interface/interface';
+import { SqlService } from './sql.service';
 
 @Injectable({
   providedIn: 'root',
@@ -11,6 +12,7 @@ export class AuthService {
   constructor(
     private userService: UserService,
     private dexieUserService: DexieUserService,
+    private sqlService: SqlService,
   ) {
     this.autoLogin();
   }
@@ -18,7 +20,8 @@ export class AuthService {
   //Register Method
   async registerUser(user: User): Promise<Response<User>> {
     try {
-      const res = await this.dexieUserService.AddUser(user);
+      // const res = await this.dexieUserService.AddUser(user);
+      const res = await this.sqlService.addUser(user);
       if (res) {
         return {
           success: true,
@@ -45,7 +48,8 @@ export class AuthService {
   //Login Method
   async loginUser(userData: LoginData): Promise<Response<User>> {
     try {
-      const res = await this.dexieUserService.getUserByEmail(userData);
+      // const res = await this.dexieUserService.getUserByEmail(userData);
+      const res = await this.sqlService.getUserByEmail(userData.email);
       if (res) {
         if (userData.password === res.password) {
           const userWithoutPassword = { ...res, password: undefined };

@@ -10,6 +10,7 @@ import { Task } from '../core/task';
 import { UserService } from './user.service';
 import { User } from '../interface/interface';
 import { DexieTaskService } from './dexie-task.service';
+import { SqlService } from './sql.service';
 
 @Injectable({
   providedIn: 'root',
@@ -23,6 +24,7 @@ export class TaskService {
   constructor(
     private userService: UserService,
     private dexieTaskService: DexieTaskService,
+    private sqlService: SqlService,
   ) {
     this.user = this.userService.user;
     effect(() => {
@@ -61,7 +63,8 @@ export class TaskService {
     }
     this._tasks.update((tasks) => [...tasks, task]);
     try {
-      await this.dexieTaskService.addTask(task);
+      // await this.dexieTaskService.addTask(task);
+      await this.sqlService.addTask(task);
       return true;
     } catch (error) {
       return false;
