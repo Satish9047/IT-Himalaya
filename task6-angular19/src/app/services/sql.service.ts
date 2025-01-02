@@ -23,6 +23,7 @@ export class SqlService {
       this.SQL = await initSqlJs({
         locateFile: (file) => `assets/${file}`,
       });
+
       this.db = new this.SQL.Database();
       this.initializeDatabase();
       await this.saveDatabaseToIndexedDB();
@@ -85,9 +86,6 @@ export class SqlService {
       // step 2 - get the data from the sql.js database
       const userRows = this.db.exec('SELECT * FROM userTable')[0]?.values || [];
       const taskRows = this.db.exec('SELECT * FROM taskTable')[0]?.values || [];
-
-      console.log('userRows', userRows);
-      console.log('taskRows', taskRows);
 
       // step 3 -save the data into indexedDB
       //user
@@ -212,16 +210,25 @@ export class SqlService {
     return false;
   }
 
-  public async getUserByEmail(email: string): Promise<any | null> {
+  public async getUserByEmail(email: string): Promise<User | null> {
     console.log('get user by email', email);
+    if (this.db) {
+      const result = this.db.exec(
+        `SELECT * FROM userTable WHERE email = ? LIMIT 1;`,
+        [email],
+      );
+      console.log('result for getting the user by email', result[0]?.values[0]);
+      if (result[0]?.values[0]) {
+        const user: User = {
+          id: String(result[0].values[0][0]),
+          firstName: String(result[0].values[0][1]),
+          lastName: String(result[0].values[0][2]),
+          email: String(result[0].values[0][3]),
+          password: String(result[0].values[0][4]),
+        };
+        return user;
+      }
+    }
     return null;
-    //   if (this.db) {
-    //     const result = this.db.exec(
-    //       `SELECT * FROM userTable WHERE email = ? LIMIT 1;`,
-    //       [email],
-    //     );
-    //     return result[0]?.values[0] || null;
-    //   }
-    //   return null;
   }
 }
