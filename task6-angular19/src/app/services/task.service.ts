@@ -61,10 +61,17 @@ export class TaskService {
     if (!this.user()) {
       return false;
     }
-    this._tasks.update((tasks) => [...tasks, task]);
+    // this._tasks.update((tasks) => [...tasks, task]);
     try {
       // await this.dexieTaskService.addTask(task);
-      await this.sqlService.addTask(task);
+      const res = await this.sqlService.addTask(task);
+      if (res) {
+        console.log(res);
+        this._tasks.update((tasks) => [...tasks, res]);
+      } else {
+        console.log('error while adding task');
+        return false;
+      }
       return true;
     } catch (error) {
       return false;
@@ -75,11 +82,13 @@ export class TaskService {
     this._tasks.update((tasks) =>
       tasks.map((task) => {
         if (task.id === taskId && this.currentUser) {
+          const numericTaskId = Number(taskId);
           task.MarkTaskToCompleted();
-          this.dexieTaskService.updateTaskToCompleted(
-            task,
-            this.currentUser.id,
-          );
+          // this.dexieTaskService.updateTaskToCompleted(
+          //   task,
+          //   this.currentUser.id,
+          // );
+          this.sqlService.updateTask(numericTaskId, task);
         }
         return task;
       }),
@@ -90,17 +99,27 @@ export class TaskService {
     if (!this.currentUser) {
       return;
     }
-    this._tasks.update((tasks) => tasks.filter((task) => task.id !== taskId));
+    // this._tasks.update((tasks) => tasks.filter((task) => task.id !== taskId));
     try {
-      const res = await this.dexieTaskService.deleteTask(
-        taskId,
-        this.currentUser.id,
-      );
+      // const res = await this.dexieTaskService.deleteTask(
+      //   taskId,
+      //   this.currentUser.id,
+      // );
+      const numericTaskId = Number(taskId);
+      const numUserId = Number(this.currentUser.id);
+      const res = await this.sqlService.deleteTask(numericTaskId, numUserId);
+      if (res) {
+        console.log(res);
+        this._tasks.update((tasks) =>
+          tasks.filter((task) => task.id !== taskId),
+        );
+      } else {
+        console.log('error while deleting task');
+      }
     } catch (error) {
       console.log('Error deleting tasks', error);
     }
   }
-
   clearTasks() {
     this._tasks.set([]);
   }
