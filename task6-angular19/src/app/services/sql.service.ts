@@ -1,6 +1,7 @@
+import { openDB } from 'idb';
 import { Injectable } from '@angular/core';
 import initSqlJs, { Database, SqlJsStatic } from 'sql.js';
-import { openDB } from 'idb';
+
 import { Task } from '../core/task';
 import { User } from '../interface/interface';
 
@@ -69,6 +70,13 @@ export class SqlService {
     }
   }
 
+  private async loadDataFromIndexedDBToSqlite(): Promise<void> {
+    try {
+    } catch (error) {
+      console.log('Error loading data from IndexedDB:', error);
+    }
+  }
+
   private async saveDatabaseToIndexedDB(): Promise<void> {
     if (!this.db) return;
     try {
@@ -94,8 +102,17 @@ export class SqlService {
         .objectStore('userTable');
       for (const userRow of userRows) {
         const [id, firstName, lastName, email, password] = userRow;
-        userStore.put({ id, firstName, lastName, email, password });
+        await userStore.put({ id, firstName, lastName, email, password });
       }
+
+      const existingTasksIds = await idb
+        .getAll('taskTable')
+        .then((tasks) => tasks.map((task) => task.id));
+      await this.deleteTaskNotInSqlite(
+        idb as unknown as IDBDatabase,
+        existingTasksIds,
+        taskRows,
+      );
 
       // task
       const taskStore = idb
@@ -111,7 +128,7 @@ export class SqlService {
           completedAt,
           userId,
         ] = taskRow;
-        taskStore.put({
+        await taskStore.put({
           id,
           description,
           createdAt,
@@ -126,60 +143,115 @@ export class SqlService {
     }
   }
 
-  // Add a new task
-  public async addTask(task: Task): Promise<void> {
-    console.log('add task', task);
-    //   if (this.db) {
-    //     this.db.run(
-    //       `
-    //       INSERT INTO taskTable (description, createdAt, dueDate, completed, completedAt, userId)
-    //       VALUES (?, ?, ?, ?, ?, ?);
-    //     `,
-    //       [
-    //         task.description,
-    //         task.createdAt,
-    //         task.dueDate,
-    //         task.completed ? 1 : 0,
-    //         task.completedAt,
-    //         task.userId,
-    //       ],
-    //     );
+  private async deleteTaskNotInSqlite(
+    idb: IDBDatabase,
+    existingTaskIDs: number[],
+    taskRows: any[],
+  ) {
+    const taskTable = idb
+      .transaction('taskTable', 'readwrite')
+      .objectStore('taskTable');
 
-    //     await this.saveDatabaseToIndexedDB();
-    //   }
+    // delete tasks
+    const taskIdsInSQLite = taskRows.map((taskRow) => taskRow.id);
+
+    for (const taskId of existingTaskIDs) {
+      if (!taskIdsInSQLite.includes(taskId.toString())) {
+        taskTable.delete(taskId);
+      }
+    }
   }
 
-  // public async updateTask(taskId: number, updatedTask: Task): Promise<void> {
-  //   if (this.db) {
-  //     this.db.run(
-  //       `
-  //           UPDATE taskTable
-  //           SET (dueDate = ?, completed = ?, completedAt = ?)
-  //           WHERE id = ? and userId = ?;
-  //         `,
-  //       [
-  //         updatedTask.dueDate,
-  //         updatedTask.completed ? 1 : 0,
-  //         updatedTask.completedAt,
-  //         taskId,
-  //         updatedTask.userId,
-  //       ],
-  //     );
-  //     await this.saveDatabaseToIndexedDB();
-  //   }
-  // }
+  // Add a new task
+  public async addTask(task: Task): Promise<Task | null> {
+    console.log('add task', task);
+    if (this.db) {
+      this.db.run(
+        `
+          INSERT INTO taskTable (description, createdAt, dueDate, completed, completedAt, userId)
+          VALUES (?, ?, ?, ?, ?, ?);
+        `,
+        [
+          task.description,
+          task.createdAt,
+          task.dueDate,
+          task.completed ? 1 : 0,
+          task.completedAt,
+          task.userId,
+        ],
+      );
+      const result = this.db.exec('SELECT last_insert_rowid() as id;');
+      const taskId = result[0]?.values[0][0];
+      if (taskId === undefined || taskId === null) {
+        throw new Error('Failed to retrieve the ID of the inserted task.');
+      }
+      const savedTask: Task = {
+        ...task,
+        id: taskId.toString(),
+        MarkTaskToCompleted: task.MarkTaskToCompleted,
+      };
+      await this.saveDatabaseToIndexedDB();
+      return savedTask;
+    } else {
+      return null;
+    }
+  }
 
-  // public async deleteTask(taskId: number, userId: number): Promise<void> {
-  //   if (this.db) {
-  //     this.db.run(
-  //       `
-  //       DELETE FROM taskTable WHERE id = ? and userId = ?;
-  //     `,
-  //       [taskId, userId],
-  //     );
-  //     await this.saveDatabaseToIndexedDB();
-  //   }
-  // }
+  public async updateTask(taskId: number, updatedTask: Task): Promise<void> {
+    console.log('update task from sql Service', updatedTask);
+    if (this.db) {
+      this.db.run(
+        `
+            UPDATE taskTable
+            SET dueDate = ?, completed = ?, completedAt = ?
+            WHERE id = ? and userId = ?;
+          `,
+        [
+          updatedTask.dueDate,
+          updatedTask.completed ? 1 : 0,
+          updatedTask.completedAt,
+          taskId,
+          updatedTask.userId,
+        ],
+      );
+      await this.saveDatabaseToIndexedDB();
+    }
+  }
+
+  public async deleteTask(taskId: number, userId: number): Promise<Boolean> {
+    console.log(
+      'delete task from sql Service, taskId:',
+      taskId,
+      'userId',
+      userId,
+    );
+    if (this.db) {
+      const result = this.db.run(
+        `
+        DELETE FROM taskTable WHERE id = ? and userId = ?;
+      `,
+        [taskId, userId],
+      );
+      const res = this.db.exec('SELECT * FROM taskTable');
+      console.log('taskTable after deleting the the specific row', res);
+      console.log('delete Task result', result);
+      await this.saveDatabaseToIndexedDB();
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  private async getAllTasksIdFromIndexedDB(
+    idb: IDBDatabase,
+  ): Promise<number[]> {
+    return new Promise((resolve, reject) => {
+      const taskTable = idb
+        .transaction('taskTable', 'readwrite')
+        .objectStore('taskTable');
+    });
+    const taskIds: number[] = [];
+  }
 
   // public getAllTasks(userId: number): any[] {
   //   if (this.db) {
