@@ -23,7 +23,6 @@ export class TaskService {
 
   constructor(
     private userService: UserService,
-    private dexieTaskService: DexieTaskService,
     private sqlService: SqlService,
   ) {
     this.user = this.userService.user;
@@ -37,7 +36,10 @@ export class TaskService {
       return [];
     }
     try {
-      const res = await this.dexieTaskService.getUserTasks(this.currentUser.id);
+      const res = await this.sqlService.getAllUserTasks(
+        Number(this.currentUser.id),
+      );
+      console.log('load task form taskService', res);
       const tasks = res.map((task) => {
         return new Task(
           task.userId,
@@ -61,9 +63,7 @@ export class TaskService {
     if (!this.user()) {
       return false;
     }
-    // this._tasks.update((tasks) => [...tasks, task]);
     try {
-      // await this.dexieTaskService.addTask(task);
       const res = await this.sqlService.addTask(task);
       if (res) {
         console.log(res);
@@ -84,10 +84,6 @@ export class TaskService {
         if (task.id === taskId && this.currentUser) {
           const numericTaskId = Number(taskId);
           task.MarkTaskToCompleted();
-          // this.dexieTaskService.updateTaskToCompleted(
-          //   task,
-          //   this.currentUser.id,
-          // );
           this.sqlService.updateTask(numericTaskId, task);
         }
         return task;
@@ -99,12 +95,7 @@ export class TaskService {
     if (!this.currentUser) {
       return;
     }
-    // this._tasks.update((tasks) => tasks.filter((task) => task.id !== taskId));
     try {
-      // const res = await this.dexieTaskService.deleteTask(
-      //   taskId,
-      //   this.currentUser.id,
-      // );
       const numericTaskId = Number(taskId);
       const numUserId = Number(this.currentUser.id);
       const res = await this.sqlService.deleteTask(numericTaskId, numUserId);
@@ -120,6 +111,7 @@ export class TaskService {
       console.log('Error deleting tasks', error);
     }
   }
+
   clearTasks() {
     this._tasks.set([]);
   }

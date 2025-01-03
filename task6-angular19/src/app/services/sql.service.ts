@@ -26,8 +26,15 @@ export class SqlService {
       });
 
       this.db = new this.SQL.Database();
-      this.initializeDatabase();
-      await this.saveDatabaseToIndexedDB();
+      const result = this.db.exec(
+        "SELECT name FROM sqlite_master WHERE type='table';",
+      );
+      if (result.length === 0) {
+        this.initializeDatabase();
+        await this.saveDatabaseToIndexedDB();
+      } else {
+        this.loadDataFromIndexedDBToSqlite();
+      }
     } catch (error) {
       console.error('Error initializing sql.js:', error);
     }
@@ -57,21 +64,60 @@ export class SqlService {
           FOREIGN KEY (userId) REFERENCES userTable (id)
         );
       `);
-
-      this.db.run(`
-        INSERT INTO userTable (firstName, lastName, email, password)
-        Values (
-          'admin',
-          'admin',
-          'admin@gmail.com',
-          '123123123'
-        );
-      `);
     }
   }
 
   private async loadDataFromIndexedDBToSqlite(): Promise<void> {
+    if (!this.db && !this.SQL) {
+      return;
+    }
     try {
+      const db = await openDB(this.DB_NAME, 1);
+      const taskCount = await db.count('taskTable');
+      const userCount = await db.count('userTable');
+      if (taskCount > 0 && userCount > 0) {
+        const tasks = await db.getAll('taskTable');
+        const users = await db.getAll('userTable');
+
+        if (tasks.length > 0) {
+          for (const task of tasks) {
+            this.db?.run(
+              `
+                INSERT INTO taskTable (id, description, createdAt, dueDate, completed, completedAt, userId)
+                VALUES (?, ?, ?, ?, ?, ?, ?);
+              `,
+              [
+                task.id,
+                task.description,
+                task.createdAt,
+                task.dueDate,
+                task.completed,
+                task.completedAt,
+                task.userId,
+              ],
+            );
+          }
+        }
+
+        if (users.length > 0) {
+          for (const user of users) {
+            this.db?.run(
+              `
+              INSERT INTO userTable (id, firstName, lastName, email, password) VALUES (?, ?, ?, ?, ?);
+              `,
+              [
+                user.id,
+                user.firstName,
+                user.lastName,
+                user.email,
+                user.password,
+              ],
+            );
+          }
+        }
+
+        console.log('dataLoad successfully');
+      }
     } catch (error) {
       console.log('Error loading data from IndexedDB:', error);
     }
@@ -104,15 +150,6 @@ export class SqlService {
         const [id, firstName, lastName, email, password] = userRow;
         await userStore.put({ id, firstName, lastName, email, password });
       }
-
-      const existingTasksIds = await idb
-        .getAll('taskTable')
-        .then((tasks) => tasks.map((task) => task.id));
-      await this.deleteTaskNotInSqlite(
-        idb as unknown as IDBDatabase,
-        existingTasksIds,
-        taskRows,
-      );
 
       // task
       const taskStore = idb
@@ -232,6 +269,7 @@ export class SqlService {
       `,
         [taskId, userId],
       );
+
       const res = this.db.exec('SELECT * FROM taskTable');
       console.log('taskTable after deleting the the specific row', res);
       console.log('delete Task result', result);
@@ -250,23 +288,22 @@ export class SqlService {
         .transaction('taskTable', 'readwrite')
         .objectStore('taskTable');
     });
-    const taskIds: number[] = [];
   }
 
-  // public getAllTasks(userId: number): any[] {
-  //   if (this.db) {
-  //     const query = `SELECT * FROM taskTable WHERE userId = ?;`;
+  public async getAllUserTasks(userId: number): Promise<any[] | []> {
+    if (this.db) {
+      const query = `SELECT * FROM taskTable WHERE userId = ?;`;
 
-  //     const result = this.db.exec(query, [userId]);
-  //     return result[0]?.values || [];
-  //   }
-  //   return [];
-  // }
+      const result = this.db.exec(query, [userId]);
+      console.log('getAllTasks result', result);
+      return result[0]?.values || [];
+    }
+    return [];
+  }
 
   // //add user
   public async addUser(user: User) {
     console.log('add user', user);
-    // return null;
     if (this.db) {
       this.db.run(
         `
