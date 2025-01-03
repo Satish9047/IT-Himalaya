@@ -38,7 +38,7 @@ export class TaskService {
       const res = await this.sqlService.getAllUserTasks(
         Number(this.currentUser.id),
       );
-      console.log('load task form taskService', res);
+      // console.log('load task form taskService', res);
       const tasks = res.map((task) => {
         return new Task(
           task.userId,
