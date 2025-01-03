@@ -23,7 +23,7 @@ export class CompletedTasksComponent implements OnInit {
 
   //Om Initialization
   ngOnInit(): void {
-    this.taskService.loadTasks();
+    // this.taskService.loadTasks();
   }
 
   //Delete Method
