@@ -7,10 +7,9 @@ import {
 } from '@angular/core';
 
 import { Task } from '../core/task';
+import { SqlService } from './sql.service';
 import { UserService } from './user.service';
 import { User } from '../interface/interface';
-import { DexieTaskService } from './dexie-task.service';
-import { SqlService } from './sql.service';
 
 @Injectable({
   providedIn: 'root',
