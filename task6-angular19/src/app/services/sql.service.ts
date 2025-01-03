@@ -308,22 +308,23 @@ export class SqlService {
     });
   }
 
-  public async getAllUserTasks(userId: number): Promise<any[]> {
+  public async getAllUserTasks(userId: number): Promise<Task[]> {
     if (this.db) {
       const result = this.db.exec(`SELECT * FROM taskTable WHERE userId = ?;`, [
         userId,
       ]);
-      const tasks: any[] = [];
+      const tasks: Task[] = [];
       if (result[0]?.values) {
         for (const value of result[0].values) {
-          const task = {
+          const task: Task = {
             id: String(value[0]),
             description: String(value[1]),
             createdAt: String(value[2]),
             dueDate: String(value[3]),
             completed: Boolean(value[4]),
             completedAt: value[5] ? String(value[5]) : null,
-            userId: Number(value[6]),
+            userId: String(value[6]),
+            MarkTaskToCompleted: () => {},
           };
           tasks.push(task);
         }
@@ -332,7 +333,6 @@ export class SqlService {
     }
     return [];
   }
-
   // //add user
   public async addUser(user: User) {
     if (this.db) {
