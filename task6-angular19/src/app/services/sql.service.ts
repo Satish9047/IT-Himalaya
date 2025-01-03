@@ -59,6 +59,7 @@ export class SqlService {
     }
   }
 
+  // Create Tables SQLite database
   private initializeDatabase(): void {
     if (this.db) {
       this.db.run(`
@@ -86,6 +87,7 @@ export class SqlService {
     }
   }
 
+  // Load data from IndexedDB to SQLite
   private async loadDataFromIndexedDBToSqlite(): Promise<void> {
     if (!this.db || !this.SQL) {
       return;
@@ -141,6 +143,7 @@ export class SqlService {
     }
   }
 
+  // Save SQLite database to IndexedDB
   private async saveDatabaseToIndexedDB(): Promise<void> {
     if (!this.db) return;
     try {
@@ -160,7 +163,6 @@ export class SqlService {
       const taskRows = this.db.exec('SELECT * FROM taskTable')[0]?.values || [];
 
       // step 3 -save the data into indexedDB
-      //user
       const userStore = idb
         .transaction('userTable', 'readwrite')
         .objectStore('userTable');
@@ -199,25 +201,6 @@ export class SqlService {
     }
   }
 
-  private async deleteTaskNotInSqlite(
-    idb: IDBDatabase,
-    existingTaskIDs: number[],
-    taskRows: any[],
-  ) {
-    const taskTable = idb
-      .transaction('taskTable', 'readwrite')
-      .objectStore('taskTable');
-
-    // delete tasks
-    const taskIdsInSQLite = taskRows.map((taskRow) => taskRow.id);
-
-    for (const taskId of existingTaskIDs) {
-      if (!taskIdsInSQLite.includes(taskId.toString())) {
-        taskTable.delete(taskId);
-      }
-    }
-  }
-
   // Add a new task
   public async addTask(task: Task): Promise<Task | null> {
     if (this.db) {
@@ -252,6 +235,7 @@ export class SqlService {
     }
   }
 
+  // Update a task
   public async updateTask(taskId: number, updatedTask: Task): Promise<void> {
     if (this.db) {
       this.db.run(
@@ -272,6 +256,7 @@ export class SqlService {
     }
   }
 
+  // Delete a task
   public async deleteTask(taskId: number, userId: number): Promise<Boolean> {
     console.log(
       'delete task from sql Service, taskId:',
@@ -280,34 +265,31 @@ export class SqlService {
       userId,
     );
     if (this.db) {
-      const result = this.db.exec(
-        `
-        DELETE FROM taskTable WHERE id = ? and userId = ?;
-      `,
-        [taskId, userId],
-      );
-      console.log('taskTable after deleting the the specific row', result);
+      try {
+        this.db.exec(
+          `
+          DELETE FROM taskTable WHERE id = ? and userId = ?;
+        `,
+          [taskId, userId],
+        );
 
-      // const res = this.db.exec('SELECT * FROM taskTable');
-      // console.log('taskTable after deleting the the specific row', res);
-      // console.log('delete Task result', result);
-      // await this.saveDatabaseToIndexedDB();
-      return true;
+        const idb = await openDB(this.DB_NAME, 1);
+        const taskTable = idb
+          .transaction(this.TASK_STORE_NAME, 'readwrite')
+          .objectStore(this.TASK_STORE_NAME);
+        await taskTable.delete(taskId);
+        console.log('Task deleted successfully from SQLite.');
+        return true;
+      } catch (error) {
+        console.error('Error deleting task:', error);
+        return false;
+      }
     } else {
       return false;
     }
   }
 
-  private async getAllTasksIdFromIndexedDB(
-    idb: IDBDatabase,
-  ): Promise<number[]> {
-    return new Promise((resolve, reject) => {
-      const taskTable = idb
-        .transaction('taskTable', 'readwrite')
-        .objectStore('taskTable');
-    });
-  }
-
+  // Get all tasks of a user
   public async getAllUserTasks(userId: number): Promise<Task[]> {
     if (this.db) {
       const result = this.db.exec(`SELECT * FROM taskTable WHERE userId = ?;`, [
@@ -333,6 +315,7 @@ export class SqlService {
     }
     return [];
   }
+
   // //add user
   public async addUser(user: User) {
     if (this.db) {
@@ -349,6 +332,7 @@ export class SqlService {
     return false;
   }
 
+  //get user by email
   public async getUserByEmail(email: string): Promise<User | null> {
     if (this.db) {
       const result = this.db.exec(
