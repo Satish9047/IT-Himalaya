@@ -21,19 +21,38 @@ export class SqlService {
 
   private async initSqlJs() {
     try {
+      // Initialize the sql.js library
       this.SQL = await initSqlJs({
         locateFile: (file) => `assets/${file}`,
       });
 
+      // Create an in-memory SQLite database
       this.db = new this.SQL.Database();
-      const result = this.db.exec(
-        "SELECT name FROM sqlite_master WHERE type='table';",
-      );
-      if (result.length === 0) {
+
+      // Check if IndexedDB already has data
+      const idb = await openDB(this.DB_NAME, 1, {
+        upgrade(db) {
+          if (!db.objectStoreNames.contains('userTable')) {
+            db.createObjectStore('userTable', { keyPath: 'id' });
+          }
+          if (!db.objectStoreNames.contains('taskTable')) {
+            db.createObjectStore('taskTable', { keyPath: 'id' });
+          }
+        },
+      });
+
+      // Check if IndexedDB stores have any data
+      const userCount = await idb.count(this.USER_STORE_NAME);
+      const taskCount = await idb.count(this.TASK_STORE_NAME);
+
+      if (userCount > 0 || taskCount > 0) {
+        // If data exists in IndexedDB, load it into SQLite
+        this.initializeDatabase();
+        await this.loadDataFromIndexedDBToSqlite();
+      } else {
+        // If no data in IndexedDB, initialize the SQLite database and save it to IndexedDB
         this.initializeDatabase();
         await this.saveDatabaseToIndexedDB();
-      } else {
-        this.loadDataFromIndexedDBToSqlite();
       }
     } catch (error) {
       console.error('Error initializing sql.js:', error);
@@ -68,56 +87,56 @@ export class SqlService {
   }
 
   private async loadDataFromIndexedDBToSqlite(): Promise<void> {
-    if (!this.db && !this.SQL) {
+    if (!this.db || !this.SQL) {
       return;
     }
     try {
-      const db = await openDB(this.DB_NAME, 1);
-      const taskCount = await db.count('taskTable');
-      const userCount = await db.count('userTable');
-      if (taskCount > 0 && userCount > 0) {
-        const tasks = await db.getAll('taskTable');
-        const users = await db.getAll('userTable');
+      const idb = await openDB(this.DB_NAME, 1);
 
-        if (tasks.length > 0) {
-          for (const task of tasks) {
-            this.db?.run(
-              `
-                INSERT INTO taskTable (id, description, createdAt, dueDate, completed, completedAt, userId)
-                VALUES (?, ?, ?, ?, ?, ?, ?);
-              `,
-              [
-                task.id,
-                task.description,
-                task.createdAt,
-                task.dueDate,
-                task.completed,
-                task.completedAt,
-                task.userId,
-              ],
-            );
-          }
-        }
+      //load userTable data from indexedDB to sqlite
+      const userTable = idb
+        .transaction(this.USER_STORE_NAME, 'readonly')
+        .objectStore(this.USER_STORE_NAME);
+      const users = await userTable.getAll();
 
-        if (users.length > 0) {
-          for (const user of users) {
-            this.db?.run(
-              `
+      if (users.length > 0) {
+        for (const user of users) {
+          this.db.run(
+            `
               INSERT INTO userTable (id, firstName, lastName, email, password) VALUES (?, ?, ?, ?, ?);
               `,
-              [
-                user.id,
-                user.firstName,
-                user.lastName,
-                user.email,
-                user.password,
-              ],
-            );
-          }
+            [user.id, user.firstName, user.lastName, user.email, user.password],
+          );
         }
-
-        console.log('dataLoad successfully');
       }
+
+      //load taskTable data from indexedDB to sqlite
+      const taskTable = idb
+        .transaction(this.TASK_STORE_NAME, 'readonly')
+        .objectStore(this.TASK_STORE_NAME);
+      const tasks = await taskTable.getAll();
+
+      if (tasks.length > 0) {
+        for (const task of tasks) {
+          console.log('loadTask', task);
+          this.db.run(
+            `
+              INSERT INTO taskTable (id, description, createdAt, dueDate, completed, completedAt, userId)
+              VALUES (?, ?, ?, ?, ?, ?, ?);
+            `,
+            [
+              task.id,
+              task.description,
+              task.createdAt,
+              task.dueDate,
+              task.completed,
+              task.completedAt,
+              task.userId,
+            ],
+          );
+        }
+      }
+      console.log('Successfully loaded data from IndexedDB to SQLite.');
     } catch (error) {
       console.log('Error loading data from IndexedDB:', error);
     }
@@ -290,13 +309,29 @@ export class SqlService {
     });
   }
 
-  public async getAllUserTasks(userId: number): Promise<any[] | []> {
+  public async getAllUserTasks(userId: number): Promise<Task[]> {
     if (this.db) {
-      const query = `SELECT * FROM taskTable WHERE userId = ?;`;
+      const result = this.db.exec(`SELECT * FROM taskTable WHERE userId = ?;`, [
+        userId,
+      ]);
 
-      const result = this.db.exec(query, [userId]);
-      console.log('getAllTasks result', result);
-      return result[0]?.values || [];
+      console.log('result for getting the tasks by user', result[0]?.values);
+      const tasks: Task[] = [];
+      if (result[0]?.values) {
+        for (const value of result[0].values) {
+          const task = new Task(
+            String(value[0]),
+            String(value[1]),
+            String(value[2]),
+            String(value[3]),
+            Boolean(value[4]),
+            String(value[5]),
+            String(value[6]),
+          );
+          tasks.push(task);
+        }
+      }
+      return tasks;
     }
     return [];
   }
