@@ -118,7 +118,6 @@ export class SqlService {
 
       if (tasks.length > 0) {
         for (const task of tasks) {
-          console.log('loadTask', task);
           this.db.run(
             `
               INSERT INTO taskTable (id, description, createdAt, dueDate, completed, completedAt, userId)
@@ -194,6 +193,7 @@ export class SqlService {
           userId,
         });
       }
+      console.log('Successfully saved SQLite database to IndexedDB.');
     } catch (error) {
       console.error('Error saving SQLite database to IndexedDB:', error);
     }
@@ -220,7 +220,6 @@ export class SqlService {
 
   // Add a new task
   public async addTask(task: Task): Promise<Task | null> {
-    console.log('add task', task);
     if (this.db) {
       this.db.run(
         `
@@ -254,7 +253,6 @@ export class SqlService {
   }
 
   public async updateTask(taskId: number, updatedTask: Task): Promise<void> {
-    console.log('update task from sql Service', updatedTask);
     if (this.db) {
       this.db.run(
         `
@@ -282,17 +280,18 @@ export class SqlService {
       userId,
     );
     if (this.db) {
-      const result = this.db.run(
+      const result = this.db.exec(
         `
         DELETE FROM taskTable WHERE id = ? and userId = ?;
       `,
         [taskId, userId],
       );
+      console.log('taskTable after deleting the the specific row', result);
 
-      const res = this.db.exec('SELECT * FROM taskTable');
-      console.log('taskTable after deleting the the specific row', res);
-      console.log('delete Task result', result);
-      await this.saveDatabaseToIndexedDB();
+      // const res = this.db.exec('SELECT * FROM taskTable');
+      // console.log('taskTable after deleting the the specific row', res);
+      // console.log('delete Task result', result);
+      // await this.saveDatabaseToIndexedDB();
       return true;
     } else {
       return false;
@@ -309,25 +308,23 @@ export class SqlService {
     });
   }
 
-  public async getAllUserTasks(userId: number): Promise<Task[]> {
+  public async getAllUserTasks(userId: number): Promise<any[]> {
     if (this.db) {
       const result = this.db.exec(`SELECT * FROM taskTable WHERE userId = ?;`, [
         userId,
       ]);
-
-      console.log('result for getting the tasks by user', result[0]?.values);
-      const tasks: Task[] = [];
+      const tasks: any[] = [];
       if (result[0]?.values) {
         for (const value of result[0].values) {
-          const task = new Task(
-            String(value[0]),
-            String(value[1]),
-            String(value[2]),
-            String(value[3]),
-            Boolean(value[4]),
-            String(value[5]),
-            String(value[6]),
-          );
+          const task = {
+            id: String(value[0]),
+            description: String(value[1]),
+            createdAt: String(value[2]),
+            dueDate: String(value[3]),
+            completed: Boolean(value[4]),
+            completedAt: value[5] ? String(value[5]) : null,
+            userId: Number(value[6]),
+          };
           tasks.push(task);
         }
       }
@@ -338,7 +335,6 @@ export class SqlService {
 
   // //add user
   public async addUser(user: User) {
-    console.log('add user', user);
     if (this.db) {
       this.db.run(
         `
@@ -347,7 +343,6 @@ export class SqlService {
         `,
         [user.firstName, user.lastName, user.email, user.password ?? ''],
       );
-
       await this.saveDatabaseToIndexedDB();
       return true;
     }
@@ -355,13 +350,11 @@ export class SqlService {
   }
 
   public async getUserByEmail(email: string): Promise<User | null> {
-    console.log('get user by email', email);
     if (this.db) {
       const result = this.db.exec(
         `SELECT * FROM userTable WHERE email = ? LIMIT 1;`,
         [email],
       );
-      console.log('result for getting the user by email', result[0]?.values[0]);
       if (result[0]?.values[0]) {
         const user: User = {
           id: String(result[0].values[0][0]),
