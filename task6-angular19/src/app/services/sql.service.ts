@@ -1,6 +1,7 @@
 import { openDB } from 'idb';
 import { Injectable } from '@angular/core';
 import initSqlJs, { Database, SqlJsStatic } from 'sql.js';
+// import initSqlJs, { Database, SqlJsStatic } from 'sql.js/dist/sql-wasm.js';
 
 import { Task } from '../core/task';
 import { User } from '../interface/interface';
@@ -23,7 +24,7 @@ export class SqlService {
     try {
       // Initialize the sql.js library
       this.SQL = await initSqlJs({
-        locateFile: (file) => `assets/${file}`,
+        locateFile: (file) => `assets/dist/${file}`,
       });
 
       // Create an in-memory SQLite database
