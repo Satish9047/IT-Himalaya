@@ -1,9 +1,9 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.example.app',
+  appId: 'com.taskManager.app',
   appName: 'task6-angular19',
-  webDir: 'src',
+  webDir: 'www/task6-angular19/browser',
 };
 
 export default config;
