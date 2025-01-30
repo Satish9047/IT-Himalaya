@@ -1,0 +1,19 @@
+{
+  "name": "Task Manager",
+  "short_name": "Task Man",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#3f51b5",
+  "scope": "/",
+  "dir": "ltr",
+  "lang": "en",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/public/icons/icon.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    }
+  ]
+}
